@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* ============================================================
+   IgrejasWeb System OS — Design Tokens
+   Paleta: Azul Aço · Bege · Sage Green · Textos Pretos
+   ============================================================ */
+
+@theme {
+  /* ── Cores de Texto ──────────────────────────────────────── */
+  --color-text-primary:   #1C2833;   /* Smoke/Off-Black — corpo principal */
+  --color-text-secondary: #333333;   /* Night Rider — textos secundários */
+  --color-text-muted:     #5D6D7E;   /* Cinza azulado — labels, placeholders */
+  --color-text-black:     #000000;   /* Preto puro — bordas, alto contraste */
+
+  /* ── Backgrounds ─────────────────────────────────────────── */
+  --color-bg:             #EBF2F8;   /* Fundo geral — azul muito claro */
+  --color-bg-2:           #F5F8FB;   /* Fundo alternativo — quase branco */
+  --color-surface:        #FFFFFF;   /* Cards e painéis */
+  --color-surface-2:      #F0F4F8;   /* Surface secundária */
+
+  /* ── Paleta Principal — Azul Aço ─────────────────────────── */
+  --color-primary:        #4A7DB5;   /* Azul primário — botões, destaques */
+  --color-primary-light:  #BDE9FB;   /* Azul claro — backgrounds suaves */
+  --color-primary-dark:   #2E5F8A;   /* Azul escuro — hover, active */
+  --color-primary-muted:  #7B9DBF;   /* Azul médio — ícones, bordas */
+
+  /* ── Paleta Secundária — Slate Blue ──────────────────────── */
+  --color-slate:          #6B7FA3;   /* Slate médio */
+  --color-slate-light:    #B8C5D6;   /* Slate claro — bordas suaves */
+  --color-slate-dark:     #4A5F7A;   /* Slate escuro */
+
+  /* ── Paleta Accent — Bege e Sage ─────────────────────────── */
+  --color-beige:          #EAE0DA;   /* Bege quente — backgrounds neutros */
+  --color-beige-dark:     #C8B9B0;   /* Bege escuro — bordas */
+  --color-sage:           #D0E0CD;   /* Sage green — sucesso suave, accent */
+  --color-sage-dark:      #A8C4A3;   /* Sage escuro — hover */
+
+  /* ── Feedback ────────────────────────────────────────────── */
+  --color-success:        #3D8B5E;   /* Verde escuro — sucesso */
+  --color-success-bg:     #D0E0CD;   /* Sage — background sucesso */
+  --color-warning:        #B07D2E;   /* Âmbar escuro — aviso */
+  --color-warning-bg:     #F5E6C8;   /* Amarelo claro — background aviso */
+  --color-danger:         #A93226;   /* Vermelho escuro — erro */
+  --color-danger-bg:      #FADBD8;   /* Rosa claro — background erro */
+
+  /* ── Bordas ──────────────────────────────────────────────── */
+  --color-border:         #C8D6E5;   /* Borda padrão */
+  --color-border-strong:  #9BB0C8;   /* Borda forte */
+
+  /* ── Raios ───────────────────────────────────────────────── */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 24px;
+
+  /* ── Sombras ─────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(44, 82, 130, 0.08), 0 1px 2px rgba(44, 82, 130, 0.04);
+  --shadow-md: 0 4px 12px rgba(44, 82, 130, 0.10), 0 2px 4px rgba(44, 82, 130, 0.06);
+  --shadow-lg: 0 8px 24px rgba(44, 82, 130, 0.12), 0 4px 8px rgba(44, 82, 130, 0.08);
+}
+
+/* ── Reset de cor de texto ───────────────────────────────────── */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+p, span, label, td, th, li {
+  color: var(--color-text-secondary);
+}
+
+/* ── Scrollbar personalizada ─────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-slate-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary-muted); }
