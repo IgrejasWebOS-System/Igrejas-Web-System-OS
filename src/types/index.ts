@@ -1775,3 +1775,236 @@ export type TaxaDepreciacaoSugerida = {
   metodo:           DepreciacaoMetodo;
   norma_referencia: string;
 };
+
+// ============================================================
+// FASE 9 — EVENTOS
+// ============================================================
+
+export type EventTipo =
+  | "CULTO"
+  | "CONFERENCIA"
+  | "RETIRO"
+  | "CONGRESSO"
+  | "ENCONTRO"
+  | "SEMINARIO"
+  | "SHOW_GOSPEL"
+  | "OUTRO";
+
+export const EVENT_TIPO_LABELS: Record<EventTipo, string> = {
+  CULTO:        "Culto",
+  CONFERENCIA:  "Conferência",
+  RETIRO:       "Retiro",
+  CONGRESSO:    "Congresso",
+  ENCONTRO:     "Encontro",
+  SEMINARIO:    "Seminário",
+  SHOW_GOSPEL:  "Show Gospel",
+  OUTRO:        "Outro",
+};
+
+export const EVENT_TIPO_ICON: Record<EventTipo, string> = {
+  CULTO:        "🙏",
+  CONFERENCIA:  "🎤",
+  RETIRO:       "⛺",
+  CONGRESSO:    "🏛️",
+  ENCONTRO:     "🤝",
+  SEMINARIO:    "📚",
+  SHOW_GOSPEL:  "🎵",
+  OUTRO:        "📅",
+};
+
+export type EventStatus = "RASCUNHO" | "PUBLICADO" | "ENCERRADO" | "CANCELADO";
+
+export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
+  RASCUNHO:   "Rascunho",
+  PUBLICADO:  "Publicado",
+  ENCERRADO:  "Encerrado",
+  CANCELADO:  "Cancelado",
+};
+
+export const EVENT_STATUS_COLOR: Record<EventStatus, string> = {
+  RASCUNHO:   "#64748b",
+  PUBLICADO:  "#16a34a",
+  ENCERRADO:  "#2563eb",
+  CANCELADO:  "#dc2626",
+};
+
+export type EventItem = {
+  id:                          string;
+  ministry_id:                 string;
+  unit_id:                     string | null;
+  titulo:                      string;
+  descricao:                   string | null;
+  tipo:                        EventTipo;
+  status:                      EventStatus;
+  data_inicio:                 string;
+  data_fim:                    string | null;
+  local_nome:                  string | null;
+  local_endereco:              string | null;
+  capacidade:                  number | null;
+  inscricao_aberta:            boolean;
+  inscricao_requer_aprovacao:  boolean;
+  capa_url:                    string | null;
+  responsavel_party_id:        string | null;
+  created_by:                  string | null;
+  created_at:                  string;
+  updated_at:                  string;
+  // joins opcionais
+  inscritos_count?:            number;
+  checkins_count?:             number;
+  responsavel_nome?:           string | null;
+  unit_nome?:                  string | null;
+};
+
+export type EventRegistrationStatus = "PENDENTE" | "CONFIRMADO" | "CANCELADO" | "LISTA_ESPERA";
+
+export const EVENT_REG_STATUS_LABELS: Record<EventRegistrationStatus, string> = {
+  PENDENTE:      "Pendente",
+  CONFIRMADO:    "Confirmado",
+  CANCELADO:     "Cancelado",
+  LISTA_ESPERA:  "Lista de Espera",
+};
+
+export const EVENT_REG_STATUS_COLOR: Record<EventRegistrationStatus, string> = {
+  PENDENTE:      "#d97706",
+  CONFIRMADO:    "#16a34a",
+  CANCELADO:     "#dc2626",
+  LISTA_ESPERA:  "#2563eb",
+};
+
+export type EventRegistration = {
+  id:               string;
+  ministry_id:      string;
+  event_id:         string;
+  party_id:         string | null;
+  nome_externo:     string | null;
+  telefone_externo: string | null;
+  status:           EventRegistrationStatus;
+  inscrito_por:     string | null;
+  observacao:       string | null;
+  created_at:       string;
+  updated_at:       string;
+  // joins
+  party_nome?:      string | null;
+  party_foto?:      string | null;
+};
+
+export type EventCheckin = {
+  id:              string;
+  ministry_id:     string;
+  event_id:        string;
+  registration_id: string | null;
+  party_id:        string | null;
+  nome_avulso:     string | null;
+  checkin_at:      string;
+  checkin_by:      string | null;
+  // joins
+  party_nome?:     string | null;
+};
+
+// ============================================================
+// FASE 10 — OCORRÊNCIAS
+// ============================================================
+
+export type OccurrenceTipo =
+  | "DISCIPLINAR"
+  | "PASTORAL"
+  | "FAMILIAR"
+  | "FINANCEIRO"
+  | "SAUDE"
+  | "JURIDICO"
+  | "OUTRO";
+
+export const OCCURRENCE_TIPO_LABELS: Record<OccurrenceTipo, string> = {
+  DISCIPLINAR: "Disciplinar",
+  PASTORAL:    "Pastoral",
+  FAMILIAR:    "Familiar",
+  FINANCEIRO:  "Financeiro",
+  SAUDE:       "Saúde",
+  JURIDICO:    "Jurídico",
+  OUTRO:       "Outro",
+};
+
+export const OCCURRENCE_TIPO_ICON: Record<OccurrenceTipo, string> = {
+  DISCIPLINAR: "⚖️",
+  PASTORAL:    "🙏",
+  FAMILIAR:    "🏠",
+  FINANCEIRO:  "💰",
+  SAUDE:       "🏥",
+  JURIDICO:    "📜",
+  OUTRO:       "📋",
+};
+
+export const OCCURRENCE_TIPO_COLOR: Record<OccurrenceTipo, string> = {
+  DISCIPLINAR: "#dc2626",
+  PASTORAL:    "#2563eb",
+  FAMILIAR:    "#d97706",
+  FINANCEIRO:  "#7c3aed",
+  SAUDE:       "#0891b2",
+  JURIDICO:    "#64748b",
+  OUTRO:       "#64748b",
+};
+
+export type OccurrenceStatus = "ABERTA" | "EM_ACOMPANHAMENTO" | "RESOLVIDA" | "ARQUIVADA";
+
+export const OCCURRENCE_STATUS_LABELS: Record<OccurrenceStatus, string> = {
+  ABERTA:             "Aberta",
+  EM_ACOMPANHAMENTO:  "Em Acompanhamento",
+  RESOLVIDA:          "Resolvida",
+  ARQUIVADA:          "Arquivada",
+};
+
+export const OCCURRENCE_STATUS_COLOR: Record<OccurrenceStatus, string> = {
+  ABERTA:             "#dc2626",
+  EM_ACOMPANHAMENTO:  "#d97706",
+  RESOLVIDA:          "#16a34a",
+  ARQUIVADA:          "#64748b",
+};
+
+export type OccurrenceNivelSigilo = "NORMAL" | "RESTRITO";
+
+export type FollowupTipoContato = "VISITA" | "LIGACAO" | "REUNIAO" | "MENSAGEM" | "EMAIL" | "OUTRO";
+
+export const FOLLOWUP_CONTATO_LABELS: Record<FollowupTipoContato, string> = {
+  VISITA:   "Visita",
+  LIGACAO:  "Ligação",
+  REUNIAO:  "Reunião",
+  MENSAGEM: "Mensagem",
+  EMAIL:    "E-mail",
+  OUTRO:    "Outro",
+};
+
+export type Occurrence = {
+  id:                   string;
+  ministry_id:          string;
+  unit_id:              string | null;
+  party_id:             string | null;
+  tipo:                 OccurrenceTipo;
+  titulo:               string;
+  descricao:            string | null;
+  data_ocorrencia:      string;
+  status:               OccurrenceStatus;
+  nivel_sigilo:         OccurrenceNivelSigilo;
+  responsavel_party_id: string | null;
+  resolucao:            string | null;
+  created_by:           string | null;
+  created_at:           string;
+  updated_at:           string;
+  // joins
+  party_nome?:          string | null;
+  party_foto?:          string | null;
+  responsavel_nome?:    string | null;
+  unit_nome?:           string | null;
+  followups_count?:     number;
+};
+
+export type OccurrenceFollowup = {
+  id:            string;
+  ministry_id:   string;
+  occurrence_id: string;
+  data:          string;
+  tipo_contato:  FollowupTipoContato;
+  descricao:     string;
+  proxima_acao:  string | null;
+  created_by:    string | null;
+  created_at:    string;
+};

@@ -229,9 +229,9 @@ export default function ProgramacoesClient({ recorrentes, contas, categorias }: 
                 </label>
                 <label style={labelStyle}>
                   Periodicidade *
-                  <select name="periodicidade" required style={inputStyle}>
+                  <select name="periodicidade" required defaultValue="MENSAL" style={inputStyle}>
                     {Object.entries(FIN_RECURRING_PERIODICITY_LABELS).map(([v, l]) => (
-                      <option key={v} value={v} selected={v === "MENSAL"}>{l}</option>
+                      <option key={v} value={v}>{l}</option>
                     ))}
                   </select>
                 </label>
