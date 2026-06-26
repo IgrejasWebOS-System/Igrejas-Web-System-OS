@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     .maybeSingle();
 
   if (specificRole) {
-    resolvedRole = specificRole as RoleResult;
+    resolvedRole = specificRole as unknown as RoleResult;
   } else {
     // Tenta Super-Master
     const { data: superRole } = await supabase
