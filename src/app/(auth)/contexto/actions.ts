@@ -27,7 +27,7 @@ export async function selecionarContextoAction(ministryId: string) {
     .maybeSingle();
 
   if (specificRole) {
-    resolvedRole = specificRole as RoleResult;
+    resolvedRole = specificRole as unknown as RoleResult;
   } else {
     // 2. Tenta Super-Master (ministry_id IS NULL)
     const { data: superRole } = await supabase

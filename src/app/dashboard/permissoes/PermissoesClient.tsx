@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { criarPerfilAction, revogarGrantAction } from "./actions";
 import { MODULOS } from "./constants";
 
@@ -101,14 +101,14 @@ export default function PermissoesClient({ perfis, grants }: { perfis: Perfil[];
                   <div style={{ fontSize: 11, fontWeight: 700, color: "var(--color-text-muted)" }}>Módulo</div>
                   {["Ler","Criar","Editar","Excluir"].map(a => <div key={a} style={{ fontSize: 11, fontWeight: 700, color: "var(--color-text-muted)", textAlign: "center" }}>{a}</div>)}
                   {MODULOS.map(mod => (
-                    <>
-                      <div key={`l_${mod}`} style={{ fontSize: 12, textTransform: "capitalize" }}>{mod}</div>
+                    <React.Fragment key={mod}>
+                      <div style={{ fontSize: 12, textTransform: "capitalize" }}>{mod}</div>
                       {["ler","criar","editar","excluir"].map(a => (
                         <div key={`${mod}_${a}`} style={{ textAlign: "center" }}>
                           <input type="checkbox" name={`${mod}_${a}`} defaultChecked={a === "ler"} />
                         </div>
                       ))}
-                    </>
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
