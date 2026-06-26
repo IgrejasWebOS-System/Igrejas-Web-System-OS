@@ -8,7 +8,7 @@
 
 - [ ] Conta na Vercel: https://vercel.com (plano Hobby é gratuito)
 - [ ] Git com o projeto já commitado
-- [ ] Projeto Supabase criado com as migrations 001–038 executadas
+- [ ] Projeto Supabase criado com as migrations 001–039 executadas
 - [ ] Node.js 20+ instalado localmente
 
 ---

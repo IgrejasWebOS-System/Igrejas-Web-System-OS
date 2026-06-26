@@ -414,6 +414,10 @@ export default function Sidebar({ ctx }: Props) {
         {ctx.level <= 2 && (
           <>
             <SectionLabel label="Administração" />
+            {/* ── Super Master: gestão de campos (N0 only) ─── */}
+            {ctx.level === 0 && (
+              <NavItem icon="unidades" label="Campos / Igrejas" href="/dashboard/admin/campos" active={pathname.startsWith("/dashboard/admin/campos")} />
+            )}
             {ctx.level <= 1 && (
               <>
                 <NavItem icon="unidades" label="Unidades" href="/dashboard/admin/unidades" active={pathname.startsWith("/dashboard/admin/unidades")} />
