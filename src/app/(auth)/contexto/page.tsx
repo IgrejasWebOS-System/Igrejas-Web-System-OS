@@ -28,7 +28,7 @@ export default async function ContextoPage() {
     .eq("is_active", true)
     .order("level");
 
-  const adminRoles = (roles ?? []) as AdminRole[];
+  const adminRoles = (roles ?? []) as unknown as AdminRole[];
 
   // Detecta Super-Master (level=0 com ministry_id=null)
   const isSuperMaster = adminRoles.some(r => r.level === 0 && !r.ministry_id);
