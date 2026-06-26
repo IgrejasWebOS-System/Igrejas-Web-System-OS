@@ -5,7 +5,7 @@ type Props = {
   ministryName: string;
   ministrySlug: string;
   level: number;
-  action: () => Promise<never>;
+  action: () => Promise<void>;
 };
 
 const levelLabel: Record<number, string> = {
