@@ -908,3 +908,870 @@ export type RequisitionListItem = Requisition & {
 export type RequisitionDetail = RequisitionListItem & {
   membro_matricula: string | null;
 };
+
+// ── Fase 5 — Escola Teológica ─────────────────────────────────────────────────
+
+export type EnrollmentSituacao =
+  | "CURSANDO"
+  | "APROVADO"
+  | "REPROVADO_NOTA"
+  | "REPROVADO_FREQUENCIA"
+  | "TRANCADO";
+
+export const ENROLLMENT_SITUACAO_LABELS: Record<EnrollmentSituacao, string> = {
+  CURSANDO:             "Cursando",
+  APROVADO:             "Aprovado",
+  REPROVADO_NOTA:       "Reprovado (nota)",
+  REPROVADO_FREQUENCIA: "Reprovado (frequência)",
+  TRANCADO:             "Trancado",
+};
+
+export const ENROLLMENT_SITUACAO_COLORS: Record<EnrollmentSituacao, { bg: string; color: string }> = {
+  CURSANDO:             { bg: "#dbeafe", color: "#1e40af" },
+  APROVADO:             { bg: "#dcfce7", color: "#166534" },
+  REPROVADO_NOTA:       { bg: "#fee2e2", color: "#991b1b" },
+  REPROVADO_FREQUENCIA: { bg: "#fef3c7", color: "#92400e" },
+  TRANCADO:             { bg: "#f1f5f9", color: "#475569" },
+};
+
+export type GradeTipo = "AP1" | "AP2" | "FINAL" | "RECUPERACAO";
+
+export type SchoolSemester = {
+  id:          string;
+  ministry_id: string;
+  nome:        string;
+  data_inicio: string;
+  data_fim:    string;
+  is_active:   boolean;
+  created_at:  string;
+};
+
+export type SchoolSemesterWithStats = SchoolSemester & {
+  total_disciplinas: number;
+  total_alunos:      number;
+};
+
+export type SchoolDiscipline = {
+  id:                 string;
+  ministry_id:        string;
+  semester_id:        string;
+  nome:               string;
+  carga_horaria:      number;
+  professor_party_id: string | null;
+  nota_minima:        number;
+  frequencia_minima:  number;
+  is_active:          boolean;
+  created_at:         string;
+};
+
+export type SchoolDisciplineWithStats = SchoolDiscipline & {
+  professor_nome:    string | null;
+  total_alunos:      number;
+  total_aulas:       number;
+};
+
+export type SchoolLesson = {
+  id:            string;
+  discipline_id: string;
+  ministry_id:   string;
+  numero:        number;
+  data_aula:     string;
+  conteudo:      string | null;
+  created_at:    string;
+};
+
+export type SchoolEnrollment = {
+  id:            string;
+  ministry_id:   string;
+  discipline_id: string;
+  party_id:      string;
+  situacao:      EnrollmentSituacao;
+  created_at:    string;
+};
+
+export type SchoolGrade = {
+  id:            string;
+  enrollment_id: string;
+  ministry_id:   string;
+  tipo:          GradeTipo;
+  nota:          number;
+  created_at:    string;
+  updated_at:    string;
+};
+
+export type SchoolAttendance = {
+  id:            string;
+  lesson_id:     string;
+  enrollment_id: string;
+  ministry_id:   string;
+  presente:      boolean;
+  created_at:    string;
+};
+
+// Enrollment enriquecido para exibição na disciplina
+export type EnrollmentListItem = SchoolEnrollment & {
+  party_nome:      string;
+  party_matricula: string;
+  ap1:             number | null;
+  ap2:             number | null;
+  final:           number | null;
+  recuperacao:     number | null;
+  media:           number | null;
+  presencas:       number;
+  total_aulas:     number;
+  frequencia_pct:  number;
+};
+
+// Dados completos para boletim do aluno
+export type StudentBoletim = {
+  party_id:        string;
+  party_nome:      string;
+  party_matricula: string;
+  semester_nome:   string;
+  disciplinas: Array<{
+    discipline_nome: string;
+    professor_nome:  string | null;
+    carga_horaria:   number;
+    nota_minima:     number;
+    frequencia_min:  number;
+    ap1:             number | null;
+    ap2:             number | null;
+    final:           number | null;
+    recuperacao:     number | null;
+    media:           number | null;
+    presencas:       number;
+    total_aulas:     number;
+    frequencia_pct:  number;
+    situacao:        EnrollmentSituacao;
+  }>;
+};
+
+// ── FASE 6 — CURSOS LIVRES ───────────────────────────────────
+
+export type CourseStatus = "INSCRITO" | "CONCLUIDO" | "DESISTENCIA";
+export type CourseCategoria = "GERAL" | "BIBLICO" | "DISCIPULADO" | "LIDERANCA" | "MUSICA" | "INFANTIL" | "JOVENS" | "OUTROS";
+
+export const COURSE_STATUS_LABELS: Record<CourseStatus, string> = {
+  INSCRITO:   "Inscrito",
+  CONCLUIDO:  "Concluído",
+  DESISTENCIA: "Desistência",
+};
+
+export const COURSE_STATUS_COLORS: Record<CourseStatus, { bg: string; color: string }> = {
+  INSCRITO:    { bg: "#eff6ff", color: "#1d4ed8" },
+  CONCLUIDO:   { bg: "#f0fdf4", color: "#166534" },
+  DESISTENCIA: { bg: "#fef2f2", color: "#991b1b" },
+};
+
+export const COURSE_CATEGORIA_LABELS: Record<CourseCategoria, string> = {
+  GERAL:       "Geral",
+  BIBLICO:     "Bíblico",
+  DISCIPULADO: "Discipulado",
+  LIDERANCA:   "Liderança",
+  MUSICA:      "Música",
+  INFANTIL:    "Infantil",
+  JOVENS:      "Jovens",
+  OUTROS:      "Outros",
+};
+
+export type Course = {
+  id:                  string;
+  ministry_id:         string;
+  titulo:              string;
+  descricao:           string | null;
+  categoria:           CourseCategoria;
+  carga_horaria:       number;
+  data_inicio:         string | null;
+  data_fim:            string | null;
+  vagas:               number | null;
+  publico_alvo:        string | null;
+  instrutor_party_id:  string | null;
+  frequencia_minima:   number;
+  is_active:           boolean;
+  created_at:          string;
+  updated_at:          string;
+};
+
+export type CourseWithStats = Course & {
+  instrutor_nome:    string | null;
+  total_inscritos:   number;
+  total_concluidos:  number;
+  total_aulas:       number;
+  vagas_disponiveis: number | null;
+};
+
+export type CourseLesson = {
+  id:          string;
+  course_id:   string;
+  ministry_id: string;
+  numero:      number;
+  data_aula:   string;
+  conteudo:    string | null;
+  created_at:  string;
+};
+
+export type CourseEnrollment = {
+  id:          string;
+  course_id:   string;
+  party_id:    string;
+  ministry_id: string;
+  status:      CourseStatus;
+  inscrito_em: string;
+  concluido_em: string | null;
+  created_at:  string;
+};
+
+export type CourseEnrollmentListItem = CourseEnrollment & {
+  party_nome:      string;
+  party_matricula: string;
+  presencas:       number;
+  total_aulas:     number;
+  frequencia_pct:  number;
+  certificado_id:  string | null;
+};
+
+export type CourseAttendance = {
+  id:            string;
+  lesson_id:     string;
+  enrollment_id: string;
+  ministry_id:   string;
+  presente:      boolean;
+  created_at:    string;
+};
+
+export type CourseCertificate = {
+  id:            string;
+  enrollment_id: string;
+  ministry_id:   string;
+  emitido_em:    string;
+};
+
+// ── FASE 7 — TESOURARIA / FINANCEIRO ────────────────────────
+
+export type FinTxTipo   = "ENTRADA" | "SAIDA";
+export type FinTxStatus = "PENDENTE" | "APROVADO" | "REJEITADO" | "ESTORNADO";
+export type FinAccountTipo   = "BANCO" | "CAIXA" | "POUPANCA" | "INVESTIMENTO";
+export type FinCategoryTipo  = "RECEITA" | "DESPESA";
+export type FinCategoryFundo = "DIZIMO" | "OFERTA" | "MISSOES" | "CONSTRUCAO" | "EVENTO" | "OUTRO";
+export type FinPeriodStatus  = "ABERTO" | "FECHADO";
+
+export const FIN_TX_STATUS_LABELS: Record<FinTxStatus, string> = {
+  PENDENTE:  "Pendente",
+  APROVADO:  "Aprovado",
+  REJEITADO: "Rejeitado",
+  ESTORNADO: "Estornado",
+};
+export const FIN_TX_STATUS_COLORS: Record<FinTxStatus, { bg: string; color: string }> = {
+  PENDENTE:  { bg: "#fffbeb", color: "#92400e" },
+  APROVADO:  { bg: "#f0fdf4", color: "#166534" },
+  REJEITADO: { bg: "#fef2f2", color: "#991b1b" },
+  ESTORNADO: { bg: "#f8fafc", color: "#475569" },
+};
+
+export const FIN_ACCOUNT_TIPO_LABELS: Record<FinAccountTipo, string> = {
+  BANCO:       "Banco",
+  CAIXA:       "Caixa",
+  POUPANCA:    "Poupança",
+  INVESTIMENTO: "Investimento",
+};
+
+export const FIN_FUNDO_LABELS: Record<FinCategoryFundo, string> = {
+  DIZIMO:     "Dízimo",
+  OFERTA:     "Oferta",
+  MISSOES:    "Missões",
+  CONSTRUCAO: "Construção",
+  EVENTO:     "Evento",
+  OUTRO:      "Outro",
+};
+
+export type FinPaymentMethod = {
+  id:          string;
+  ministry_id: string;
+  nome:        string;
+  is_active:   boolean;
+  created_at:  string;
+};
+
+export type FinCostCenter = {
+  id:          string;
+  ministry_id: string;
+  nome:        string;
+  descricao:   string | null;
+  is_active:   boolean;
+  created_at:  string;
+};
+
+export type FinTitheJustification = {
+  id:          string;
+  ministry_id: string;
+  nome:        string;
+  is_active:   boolean;
+  created_at:  string;
+};
+
+export type FinDocumentType = {
+  id:          string;
+  ministry_id: string;
+  nome:        string;
+  is_active:   boolean;
+  created_at:  string;
+};
+
+export type FinCategory = {
+  id:              string;
+  ministry_id:     string;
+  parent_id:       string | null;
+  codigo:          string;
+  nome:            string;
+  tipo:            FinCategoryTipo;
+  fundo:           FinCategoryFundo;
+  codigo_contabil: string | null;
+  is_active:       boolean;
+  ordem:           number;
+  created_at:      string;
+};
+
+export type FinCategoryWithChildren = FinCategory & {
+  children: FinCategory[];
+};
+
+export type FinAccount = {
+  id:            string;
+  ministry_id:   string;
+  unit_id:       string | null;
+  nome:          string;
+  tipo:          FinAccountTipo;
+  banco:         string | null;
+  agencia:       string | null;
+  conta:         string | null;
+  digito:        string | null;
+  chave_pix:     string | null;
+  saldo_inicial: number;
+  is_active:     boolean;
+  deleted_at:    string | null;
+  created_at:    string;
+  updated_at:    string;
+};
+
+export type FinAccountWithSaldo = FinAccount & {
+  saldo_atual:  number;
+  unit_nome:    string | null;
+};
+
+export type FinPeriod = {
+  id:              string;
+  ministry_id:     string;
+  unit_id:         string | null;
+  mes:             number;
+  ano:             number;
+  status:          FinPeriodStatus;
+  saldo_inicial:   number;
+  saldo_final:     number | null;
+  data_fechamento: string | null;
+  fechado_por:     string | null;
+  observacoes:     string | null;
+  created_at:      string;
+};
+
+export type FinTransaction = {
+  id:                      string;
+  ministry_id:             string;
+  unit_id:                 string | null;
+  account_id:              string;
+  category_id:             string;
+  party_id:                string | null;
+  payment_method_id:       string | null;
+  cost_center_id:          string | null;
+  document_type_id:        string | null;
+  justificativa_dizimo_id: string | null;
+  tipo:                    FinTxTipo;
+  valor:                   number;
+  data:                    string;
+  numero_documento:        string | null;
+  descricao:               string | null;
+  comprovante_url:         string | null;
+  estorno_de_id:           string | null;
+  status:                  FinTxStatus;
+  criado_por:              string | null;
+  aprovado_por:            string | null;
+  created_at:              string;
+  updated_at:              string;
+  deleted_at:              string | null;
+};
+
+export type FinTransactionListItem = FinTransaction & {
+  account_nome:         string;
+  category_nome:        string;
+  category_codigo:      string;
+  party_nome:           string | null;
+  payment_method_nome:  string | null;
+  cost_center_nome:     string | null;
+};
+
+export type FinTransfer = {
+  id:              string;
+  ministry_id:     string;
+  unit_id:         string | null;
+  account_from_id: string;
+  account_to_id:   string;
+  valor:           number;
+  data:            string;
+  descricao:       string | null;
+  criado_por:      string | null;
+  status:          "PENDENTE" | "APROVADO";
+  tx_saida_id:     string | null;
+  tx_entrada_id:   string | null;
+  created_at:      string;
+  deleted_at:      string | null;
+};
+
+export type FinTransferListItem = FinTransfer & {
+  account_from_nome: string;
+  account_to_nome:   string;
+};
+
+// ── PLANO DE CONTAS PROFISSIONAL (ITG 2002 / CFC) ────────────
+
+export type ChartAccountType   = "asset" | "liability" | "equity" | "revenue" | "expense" | "compensation";
+export type ChartAccountNature = "debit" | "credit";
+
+export const CHART_ACCOUNT_TYPE_LABELS: Record<ChartAccountType, string> = {
+  asset:         "Ativo",
+  liability:     "Passivo",
+  equity:        "Patrimônio Líquido",
+  revenue:       "Receitas",
+  expense:       "Despesas",
+  compensation:  "Compensação",
+};
+
+export const CHART_ACCOUNT_TYPE_COLORS: Record<ChartAccountType, { bg: string; color: string }> = {
+  asset:        { bg: "#dbeafe", color: "#1d4ed8" },
+  liability:    { bg: "#fee2e2", color: "#991b1b" },
+  equity:       { bg: "#d1fae5", color: "#065f46" },
+  revenue:      { bg: "#dcfce7", color: "#166534" },
+  expense:      { bg: "#fef2f2", color: "#dc2626" },
+  compensation: { bg: "#f3e8ff", color: "#7c3aed" },
+};
+
+export const CHART_ACCOUNT_NATURE_LABELS: Record<ChartAccountNature, string> = {
+  debit:  "Devedor",
+  credit: "Credor",
+};
+
+export type ChartOfAccount = {
+  id:            string;
+  ministry_id:   string;
+  parent_id:     string | null;
+  code:          string;
+  name:          string;
+  type:          ChartAccountType;
+  nature:        ChartAccountNature;
+  account_level: number;
+  is_analytical: boolean;
+  is_active:     boolean;
+  ordem:         number;
+  created_at:    string;
+  updated_at:    string;
+};
+
+export type ChartOfAccountWithChildren = ChartOfAccount & {
+  children: ChartOfAccountWithChildren[];
+};
+
+// ── FASE 7B — PROJETOS, PARCELAMENTOS, PROGRAMAÇÕES, REPASSES ──
+
+export type FinProjectTipo   = "CONSTRUCAO" | "REFORMA" | "EVANGELISMO" | "MISSOES" | "EVENTO" | "SOCIAL" | "AQUISICAO" | "OUTRO";
+export type FinProjectStatus = "PLANEJAMENTO" | "ATIVO" | "CONCLUIDO" | "CANCELADO";
+
+export const FIN_PROJECT_TIPO_LABELS: Record<FinProjectTipo, string> = {
+  CONSTRUCAO:  "Construção",
+  REFORMA:     "Reforma",
+  EVANGELISMO: "Evangelismo",
+  MISSOES:     "Missões",
+  EVENTO:      "Evento",
+  SOCIAL:      "Social",
+  AQUISICAO:   "Aquisição",
+  OUTRO:       "Outro",
+};
+
+export const FIN_PROJECT_STATUS_COLORS: Record<FinProjectStatus, { bg: string; color: string }> = {
+  PLANEJAMENTO: { bg: "#eff6ff", color: "#1d4ed8" },
+  ATIVO:        { bg: "#f0fdf4", color: "#166534" },
+  CONCLUIDO:    { bg: "#f3e8ff", color: "#7c3aed" },
+  CANCELADO:    { bg: "#fef2f2", color: "#991b1b" },
+};
+
+export type FinProject = {
+  id:                   string;
+  ministry_id:          string;
+  unit_id:              string | null;
+  nome:                 string;
+  descricao:            string | null;
+  tipo:                 FinProjectTipo;
+  status:               FinProjectStatus;
+  orcamento_total:      number | null;
+  data_inicio:          string | null;
+  data_fim_prevista:    string | null;
+  data_conclusao:       string | null;
+  responsavel_party_id: string | null;
+  is_active:            boolean;
+  created_at:           string;
+  updated_at:           string;
+};
+
+export type FinProjectWithStats = FinProject & {
+  responsavel_nome: string | null;
+  unit_nome:        string | null;
+  total_receitas:   number;
+  total_despesas:   number;
+  saldo:            number;
+};
+
+// ── Parcelamentos ────────────────────────────────────────────────
+
+export type FinInstallmentPeriodicity =
+  | "SEMANAL" | "QUINZENAL" | "MENSAL" | "BIMESTRAL" | "TRIMESTRAL" | "SEMESTRAL" | "ANUAL";
+
+export const FIN_PERIODICITY_LABELS: Record<FinInstallmentPeriodicity, string> = {
+  SEMANAL:     "Semanal",
+  QUINZENAL:   "Quinzenal",
+  MENSAL:      "Mensal",
+  BIMESTRAL:   "Bimestral",
+  TRIMESTRAL:  "Trimestral",
+  SEMESTRAL:   "Semestral",
+  ANUAL:       "Anual",
+};
+
+export type FinInstallmentPlanStatus = "ATIVO" | "QUITADO" | "CANCELADO";
+
+export type FinInstallmentPlan = {
+  id:                   string;
+  ministry_id:          string;
+  unit_id:              string | null;
+  descricao:            string;
+  tipo:                 FinTxTipo;
+  account_id:           string;
+  category_id:          string;
+  party_id:             string | null;
+  project_id:           string | null;
+  valor_total:          number;
+  num_parcelas:         number;
+  valor_parcela:        number;
+  periodicidade:        FinInstallmentPeriodicity;
+  data_primeira_parcela: string;
+  status:               FinInstallmentPlanStatus;
+  observacoes:          string | null;
+  criado_por:           string | null;
+  created_at:           string;
+  updated_at:           string;
+};
+
+export type FinInstallmentPlanListItem = FinInstallmentPlan & {
+  account_nome:   string;
+  category_nome:  string;
+  party_nome:     string | null;
+  pagas:          number;
+  atrasadas:      number;
+  valor_pago:     number;
+};
+
+export type FinInstallmentStatus = "PENDENTE" | "PAGO" | "ATRASADO" | "CANCELADO";
+
+export const FIN_INSTALLMENT_STATUS_COLORS: Record<FinInstallmentStatus, { bg: string; color: string }> = {
+  PENDENTE:  { bg: "#fffbeb", color: "#92400e" },
+  PAGO:      { bg: "#f0fdf4", color: "#166534" },
+  ATRASADO:  { bg: "#fef2f2", color: "#991b1b" },
+  CANCELADO: { bg: "#f8fafc", color: "#475569" },
+};
+
+export type FinInstallment = {
+  id:              string;
+  ministry_id:     string;
+  plan_id:         string;
+  numero:          number;
+  data_vencimento: string;
+  valor:           number;
+  status:          FinInstallmentStatus;
+  transaction_id:  string | null;
+  data_pagamento:  string | null;
+  created_at:      string;
+};
+
+// ── Programações Recorrentes ──────────────────────────────────────
+
+export type FinRecurringPeriodicity =
+  | "DIARIO" | "SEMANAL" | "QUINZENAL" | "MENSAL" | "BIMESTRAL" | "TRIMESTRAL" | "SEMESTRAL" | "ANUAL";
+
+export const FIN_RECURRING_PERIODICITY_LABELS: Record<FinRecurringPeriodicity, string> = {
+  DIARIO:      "Diário",
+  SEMANAL:     "Semanal",
+  QUINZENAL:   "Quinzenal",
+  MENSAL:      "Mensal",
+  BIMESTRAL:   "Bimestral",
+  TRIMESTRAL:  "Trimestral",
+  SEMESTRAL:   "Semestral",
+  ANUAL:       "Anual",
+};
+
+export type FinRecurringStatus = "ATIVO" | "PAUSADO" | "ENCERRADO";
+
+export const FIN_RECURRING_STATUS_COLORS: Record<FinRecurringStatus, { bg: string; color: string }> = {
+  ATIVO:     { bg: "#f0fdf4", color: "#166534" },
+  PAUSADO:   { bg: "#fffbeb", color: "#92400e" },
+  ENCERRADO: { bg: "#f8fafc", color: "#475569" },
+};
+
+export type FinRecurring = {
+  id:               string;
+  ministry_id:      string;
+  unit_id:          string | null;
+  descricao:        string;
+  tipo:             FinTxTipo;
+  account_id:       string;
+  category_id:      string;
+  party_id:         string | null;
+  project_id:       string | null;
+  valor:            number;
+  periodicidade:    FinRecurringPeriodicity;
+  dia_vencimento:   number | null;
+  data_inicio:      string;
+  data_fim:         string | null;
+  status:           FinRecurringStatus;
+  ultima_geracao:   string | null;
+  proxima_geracao:  string | null;
+  total_gerado:     number;
+  criado_por:       string | null;
+  created_at:       string;
+  updated_at:       string;
+};
+
+export type FinRecurringListItem = FinRecurring & {
+  account_nome:  string;
+  category_nome: string;
+  party_nome:    string | null;
+};
+
+// ── Repasses entre Unidades ───────────────────────────────────────
+
+export type FinRepasseStatus = "PENDENTE" | "EXECUTADO" | "CANCELADO";
+
+export const FIN_REPASSE_STATUS_COLORS: Record<FinRepasseStatus, { bg: string; color: string }> = {
+  PENDENTE:  { bg: "#fffbeb", color: "#92400e" },
+  EXECUTADO: { bg: "#f0fdf4", color: "#166534" },
+  CANCELADO: { bg: "#fef2f2", color: "#991b1b" },
+};
+
+export type FinUnitRepasse = {
+  id:              string;
+  ministry_id:     string;
+  unit_from_id:    string;
+  unit_to_id:      string;
+  account_from_id: string | null;
+  account_to_id:   string | null;
+  descricao:       string;
+  valor:           number;
+  percentual:      number | null;
+  data:            string;
+  competencia_mes: number | null;
+  competencia_ano: number | null;
+  status:          FinRepasseStatus;
+  transaction_id:  string | null;
+  criado_por:      string | null;
+  aprovado_por:    string | null;
+  created_at:      string;
+};
+
+export type FinUnitRepasseListItem = FinUnitRepasse & {
+  unit_from_nome: string;
+  unit_to_nome:   string;
+  account_from_nome: string | null;
+  account_to_nome:   string | null;
+};
+
+export type FinRepasseRule = {
+  id:            string;
+  ministry_id:   string;
+  unit_from_id:  string;
+  unit_to_id:    string;
+  descricao:     string;
+  percentual:    number;
+  base_calculo:  "DIZIMO" | "OFERTA" | "TOTAL_RECEITAS" | "VALOR_FIXO";
+  valor_fixo:    number | null;
+  periodicidade: "MENSAL" | "TRIMESTRAL" | "SEMESTRAL" | "ANUAL";
+  is_active:     boolean;
+  created_at:    string;
+};
+
+// ── FASE 8 — MÓDULO PATRIMÔNIO ────────────────────────────────────
+
+export type PatrimonyCategoria =
+  | "IMOVEL" | "MOVEL" | "EQUIPAMENTO" | "VEICULO" | "INSTRUMENTO_MUSICAL"
+  | "INFORMATICA" | "OUTRO";
+
+export const PATRIMONY_CATEGORIA_LABELS: Record<PatrimonyCategoria, string> = {
+  IMOVEL:              "Imóvel",
+  MOVEL:               "Móvel",
+  EQUIPAMENTO:         "Equipamento",
+  VEICULO:             "Veículo",
+  INSTRUMENTO_MUSICAL: "Instrumento Musical",
+  INFORMATICA:         "Informática",
+  OUTRO:               "Outro",
+};
+
+export const PATRIMONY_CATEGORIA_ICONS: Record<PatrimonyCategoria, string> = {
+  IMOVEL:              "🏠",
+  MOVEL:               "🪑",
+  EQUIPAMENTO:         "⚙️",
+  VEICULO:             "🚗",
+  INSTRUMENTO_MUSICAL: "🎸",
+  INFORMATICA:         "💻",
+  OUTRO:               "📦",
+};
+
+export type PatrimonyStatus = "ATIVO" | "BAIXADO" | "EM_MANUTENCAO" | "TRANSFERIDO";
+
+export const PATRIMONY_STATUS_COLORS: Record<PatrimonyStatus, { bg: string; color: string }> = {
+  ATIVO:          { bg: "#f0fdf4", color: "#166534" },
+  BAIXADO:        { bg: "#fef2f2", color: "#991b1b" },
+  EM_MANUTENCAO:  { bg: "#fffbeb", color: "#92400e" },
+  TRANSFERIDO:    { bg: "#eff6ff", color: "#1d4ed8" },
+};
+
+export type PatrimonyItem = {
+  id:                    string;
+  ministry_id:           string;
+  unit_id:               string | null;
+  numero_tombamento:     string;
+  nome:                  string;
+  descricao:             string | null;
+  categoria:             PatrimonyCategoria;
+  valor_aquisicao:       number;
+  data_aquisicao:        string;
+  fornecedor:            string | null;
+  nota_fiscal:           string | null;
+  vida_util_anos:        number | null;
+  taxa_depreciacao_anual: number | null;
+  valor_residual:        number | null;
+  localizacao_unit_id:   string | null;
+  responsavel_party_id:  string | null;
+  status:                PatrimonyStatus;
+  chart_account_id:      string | null;
+  foto_url:              string | null;
+  deleted_at:            string | null;
+  created_at:            string;
+  updated_at:            string;
+};
+
+export type PatrimonyItemListItem = PatrimonyItem & {
+  unit_nome:           string | null;
+  localizacao_nome:    string | null;
+  responsavel_nome:    string | null;
+  valor_contabil_atual: number;
+};
+
+export type PatrimonyMovimentoTipo =
+  | "AQUISICAO" | "TRANSFERENCIA" | "BAIXA" | "MANUTENCAO" | "RETORNO_MANUTENCAO" | "REAVALIACAO";
+
+export const PATRIMONY_MOVIMENTO_LABELS: Record<PatrimonyMovimentoTipo, string> = {
+  AQUISICAO:         "Aquisição",
+  TRANSFERENCIA:     "Transferência",
+  BAIXA:             "Baixa",
+  MANUTENCAO:        "Entrada em Manutenção",
+  RETORNO_MANUTENCAO: "Retorno da Manutenção",
+  REAVALIACAO:       "Reavaliação",
+};
+
+export type PatrimonyMovement = {
+  id:                  string;
+  ministry_id:         string;
+  item_id:             string;
+  tipo:                PatrimonyMovimentoTipo;
+  data:                string;
+  unit_from_id:        string | null;
+  unit_to_id:          string | null;
+  descricao:           string;
+  responsavel_party_id: string | null;
+  valor:               number | null;
+  created_at:          string;
+};
+
+export type PatrimonyMovementListItem = PatrimonyMovement & {
+  unit_from_nome:    string | null;
+  unit_to_nome:      string | null;
+  responsavel_nome:  string | null;
+};
+
+export type PatrimonyDepreciation = {
+  id:               string;
+  ministry_id:      string;
+  item_id:          string;
+  ano:              number;
+  mes:              number;
+  valor_depreciacao: number;
+  valor_contabil:   number;
+  transaction_id:   string | null;
+  created_at:       string;
+};
+
+// ── Tipo de Aquisição ────────────────────────────────────────────
+
+export type PatrimonyAquisicaoTipo =
+  | "COMPRA"
+  | "DOACAO"
+  | "BENEFICIAMENTO"
+  | "PERMUTA"
+  | "PRODUCAO_PROPRIA"
+  | "TRANSFERENCIA_INTERNA";
+
+export const PATRIMONY_AQUISICAO_LABELS: Record<PatrimonyAquisicaoTipo, string> = {
+  COMPRA:               "Compra",
+  DOACAO:               "Doação",
+  BENEFICIAMENTO:       "Beneficiamento / Cessão",
+  PERMUTA:              "Permuta",
+  PRODUCAO_PROPRIA:     "Produção Própria",
+  TRANSFERENCIA_INTERNA:"Transferência Interna",
+};
+
+export const PATRIMONY_AQUISICAO_INFO: Record<PatrimonyAquisicaoTipo, string> = {
+  COMPRA:               "Aquisição onerosa. Base de cálculo = nota fiscal.",
+  DOACAO:               "NBC TG 04 Art.16: base = valor justo na data da doação (laudo necessário).",
+  BENEFICIAMENTO:       "Cessão de uso com benfeitorias absorvidas. Depreciar pelo menor prazo: vida útil ou contrato.",
+  PERMUTA:              "Troca por bem/serviço. Base = valor justo do bem dado ou recebido, o mais confiável.",
+  PRODUCAO_PROPRIA:     "Bem construído/fabricado pela entidade. Base = custo de produção (materiais + mão de obra).",
+  TRANSFERENCIA_INTERNA:"Recebido de outra unidade. Manter valor contábil líquido (não recalcular depreciação).",
+};
+
+// ── Regra de Depreciação ─────────────────────────────────────────
+
+export type DepreciacaoMetodo = "LINEAR" | "SOMA_DIGITOS" | "SALDO_DECRESCENTE";
+
+export const DEPRECIACAO_METODO_LABELS: Record<DepreciacaoMetodo, string> = {
+  LINEAR:            "Linear (cotas iguais)",
+  SOMA_DIGITOS:      "Soma dos Dígitos (acelerada)",
+  SALDO_DECRESCENTE: "Saldo Decrescente",
+};
+
+export type PatrimonyDepreciationRule = {
+  id:               string;
+  ministry_id:      string | null;    // null = regra global
+  categoria:        PatrimonyCategoria;
+  tipo_aquisicao:   PatrimonyAquisicaoTipo;
+  taxa_anual:       number;
+  vida_util_anos:   number | null;
+  metodo:           DepreciacaoMetodo;
+  norma_referencia: string;
+  notas:            string | null;
+  vigente_desde:    string;
+  vigente_ate:      string | null;
+  is_active:        boolean;
+  created_at:       string;
+  updated_at:       string;
+};
+
+// Retorno da RPC buscar_taxa_depreciacao
+export type TaxaDepreciacaoSugerida = {
+  taxa_anual:       number;
+  vida_util_anos:   number | null;
+  metodo:           DepreciacaoMetodo;
+  norma_referencia: string;
+};
