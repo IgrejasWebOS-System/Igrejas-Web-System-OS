@@ -7,6 +7,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     const ctx = await getAuthContext();
+    if (!ctx) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     const sb = await createClient();
 
     // Buscar evento

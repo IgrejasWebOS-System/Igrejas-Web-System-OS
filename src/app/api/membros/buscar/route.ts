@@ -7,6 +7,7 @@ import { getAuthContext } from "@/utils/supabase/auth-context";
 export async function GET(req: NextRequest) {
   try {
     const ctx = await getAuthContext();
+    if (!ctx) return NextResponse.json({ data: [], error: "Não autorizado" }, { status: 401 });
     const supabase = await createClient();
 
     const q = req.nextUrl.searchParams.get("q")?.trim() ?? "";
