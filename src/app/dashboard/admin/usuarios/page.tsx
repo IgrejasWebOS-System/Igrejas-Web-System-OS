@@ -63,7 +63,7 @@ export default async function UsuariosPage() {
         email:      userMap.get(r.user_id) ?? "—",
         level:      r.level as AdminLevel,
         unit_id:    r.unit_id,
-        unit_name:  (r.units as { name: string } | null)?.name ?? null,
+        unit_name:  (r.units as unknown as { name: string } | null)?.name ?? null,
         is_active:  r.is_active,
         created_at: r.created_at,
       }));

@@ -46,7 +46,7 @@ export async function listarOcorrenciasAction(filtros?: {
     party_nome:       (r.parties as { full_name?: string } | null)?.full_name ?? null,
     party_foto:       (r.parties as { foto_url?: string } | null)?.foto_url ?? null,
     responsavel_nome: (r.responsavel as { full_name?: string } | null)?.full_name ?? null,
-    unit_nome:        (r.units as { name?: string } | null)?.name ?? null,
+    unit_nome:        (r.units as unknown as { name?: string } | null)?.name ?? null,
   })) as Occurrence[];
 }
 

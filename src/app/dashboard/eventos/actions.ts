@@ -42,7 +42,7 @@ export async function listarEventosAction(filtros?: {
 
   return (data ?? []).map((r: Record<string, unknown>) => ({
     ...r,
-    unit_nome:          (r.units as { name?: string } | null)?.name ?? null,
+    unit_nome:          (r.units as unknown as { name?: string } | null)?.name ?? null,
     responsavel_nome:   (r.parties as { full_name?: string } | null)?.full_name ?? null,
   })) as EventItem[];
 }

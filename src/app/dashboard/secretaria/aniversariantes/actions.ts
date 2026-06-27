@@ -71,7 +71,7 @@ export async function buscarAniversariantes(mes: number): Promise<{
       mes:       mesNasc,
       idade:     anoNasc > 1 ? idadeCalc : null,
       matricula: r.matricula ?? null,
-      unit_name: (r.units as { name: string } | null)?.name ?? null,
+      unit_name: (r.units as unknown as { name: string } | null)?.name ?? null,
     });
   }
 

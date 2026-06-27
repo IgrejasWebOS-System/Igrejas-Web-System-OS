@@ -205,7 +205,7 @@ export async function inventarioAction(data_ref?: string): Promise<InventarioRes
       valor_contabil:        val_cont,
       taxa_depreciacao_anual: item.taxa_depreciacao_anual ? Number(item.taxa_depreciacao_anual) : null,
       status:                item.status,
-      localizacao:           (item.units as { name?: string } | null)?.name ?? null,
+      localizacao:           (item.units as unknown as { name?: string } | null)?.name ?? null,
     };
   });
 

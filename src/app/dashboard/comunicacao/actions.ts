@@ -103,7 +103,7 @@ export async function enviarCampanhaAction(campaign_id: string) {
   // Marcar como enviando
   await sb.from("comm_campaigns").update({ status: "ENVIANDO", iniciado_em: new Date().toISOString() }).eq("id", campaign_id);
 
-  const canal  = (camp.comm_templates as { canal?: string } | null)?.canal ?? "EMAIL";
+  const canal  = (camp.comm_templates as unknown as { canal?: string } | null)?.canal ?? "EMAIL";
   let enviados = 0, erros = 0;
 
   for (const party of (parties ?? [])) {
