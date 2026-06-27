@@ -40,7 +40,7 @@ export async function dreAction(de: string, ate: string): Promise<DREResult> {
   // Agregar por categoria
   const mapa = new Map<string, DRELinha>();
   for (const t of data ?? []) {
-    const cat = t.fin_categories as { nome: string; codigo: string } | null;
+    const cat = t.fin_categories as unknown as { nome: string; codigo: string } | null;
     if (!cat) continue;
     const key = t.category_id as string;
     if (!mapa.has(key)) {
