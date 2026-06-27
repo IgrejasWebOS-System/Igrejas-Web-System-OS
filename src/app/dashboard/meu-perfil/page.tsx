@@ -50,7 +50,7 @@ export default async function MeuPerfilPage() {
 
   return (
     <MeuPerfilClient
-      party={party}
+      party={party as any}
       userEmail={user?.email ?? ""}
       inscricoes={inscricoes ?? []}
       documentos={documentos ?? []}
