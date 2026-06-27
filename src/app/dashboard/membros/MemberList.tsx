@@ -180,7 +180,7 @@ export default function MemberList({
           <button
             onClick={() => setShowMoreFilters(v => !v)}
             style={{
-              background: "none", border: "1px solid var(--color-border)", borderRadius: 7,
+              border: "1px solid var(--color-border)", borderRadius: 7,
               padding: "5px 12px", fontSize: 12, fontWeight: 600,
               color: showMoreFilters ? "var(--color-primary)" : "var(--color-text-muted)",
               cursor: "pointer", display: "flex", alignItems: "center", gap: 5,
