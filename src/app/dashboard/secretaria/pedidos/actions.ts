@@ -166,7 +166,7 @@ export async function criarPedidoAction(
       unit_id:         unit_id || null,
       observacoes:     observacoes || null,
       criado_por:      ctx.user_id,
-      criado_por_nome: ctx.user_email ?? null,
+      criado_por_nome: null,
     })
     .select("id")
     .single();
