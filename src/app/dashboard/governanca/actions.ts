@@ -125,6 +125,7 @@ export async function listarAuditLogsAction(filtros?: { tabela?: string; limite?
 
 export async function registrarAuditLogAction(acao: string, tabela?: string, registro_id?: string, detalhes?: Record<string, unknown>) {
   const ctx = await getAuthContext();
+  if (!ctx) return;
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
   await sb.from("audit_logs").insert({
