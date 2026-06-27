@@ -71,7 +71,7 @@ export default function EbdList({ turmas }: Props) {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
           {filtradas.map((t) => {
             const faixaStyle = FAIXA_COLORS[t.faixa_etaria] ?? FAIXA_COLORS.MISTO;
-            const temAlerta = t.faltas_consecutivas !== undefined && t.total_alunos > 0;
+            const temAlerta = t.media_frequencia !== null && t.media_frequencia < 75 && t.total_alunos > 0;
             return (
               <Link
                 key={t.id}
