@@ -65,3 +65,70 @@ sql/
 - `"use client"` apenas quando necessário (formulários, estados)
 - Server Actions em `actions.ts` junto à rota
 - Sempre validar `ministry_id` da sessão antes de qualquer mutation
+
+---
+
+## TypeScript Strict — Padrões e Armadilhas
+
+### Verificar antes de fazer push para Vercel
+```powershell
+npx tsc --noEmit
+```
+Mostra TODOS os erros de tipo de uma vez. O `next dev` (Turbopack) é leniente — não confiar nele para validação de tipos.
+
+### 1. Supabase — joins retornam array, nunca objeto
+Supabase infere joins como `T[]` mesmo quando são 1-to-1. TypeScript rejeita `as { nome: string }`.
+```typescript
+// ❌ ERRADO
+const cat = row.fin_categories as { nome: string } | null;
+
+// ✅ CORRETO
+const cat = row.fin_categories as unknown as { nome: string } | null;
+```
+
+### 2. Auth — NUNCA importar de `@/utils/auth`
+```typescript
+// ✅ SEMPRE usar
+import { getAuthContext, requireAuthContext, assertLevel } from "@/utils/supabase/auth-context";
+```
+
+- **Server Actions**: usar `getAuthContext()` + `assertLevel(ctx, N)` — assertLevel já aceita `null`
+- **Pages/Layouts (Server Components)**: usar `requireAuthContext()` — redireciona para `/login` se null
+- **API Routes**: usar `getAuthContext()` + `if (!ctx) return NextResponse.json({}, { status: 401 })`
+
+### 3. assertLevel — aceita null, use AdminLevel para parâmetros
+```typescript
+// Se tiver parâmetro de nível em funções helper:
+import type { AdminLevel } from "@/types";
+async function getCtx(minLevel: AdminLevel = 3) { ... }
+```
+
+### 4. createClient() é async
+```typescript
+// ❌ ERRADO
+const sb = createClient();
+
+// ✅ CORRETO
+const sb = await createClient();
+```
+
+### 5. useRef com tipo em React 19
+```typescript
+// ❌ ERRADO (React 19 strict rejeita)
+const ref = useRef<ReturnType<typeof setTimeout>>();
+
+// ✅ CORRETO
+const ref = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+```
+
+### 6. Objetos com propriedade duplicada
+TypeScript rejeita objeto literal com a mesma chave duas vezes (ex: `background` em inline style). Verificar antes de usar spread ou copiar estilos.
+
+### 7. Tipos de união — widening
+```typescript
+// ❌ TypeScript infere como `string`, não como union
+const filter = { tipo: (sp.tipo as "A" | "B") || "" };
+
+// ✅ Tipar o objeto explicitamente
+const filter: MeuTipo = { tipo: (sp.tipo || "") as "A" | "B" };
+```
