@@ -24,7 +24,8 @@ const ALLOWED_ATTR = [
 export async function sanitizeHtmlServer(dirty: string): Promise<string> {
   const { JSDOM } = await import("jsdom");
   const DOMPurify = (await import("dompurify")).default;
-  const window = new JSDOM("").window as unknown as Window;
-  const purify = DOMPurify(window);
+  const window = new JSDOM("").window;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const purify = DOMPurify(window as any);
   return purify.sanitize(dirty, { ALLOWED_TAGS, ALLOWED_ATTR, FORCE_BODY: true });
 }
