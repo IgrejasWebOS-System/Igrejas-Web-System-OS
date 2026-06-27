@@ -265,7 +265,7 @@ export default function ProgramacoesClient({ recorrentes, contas, categorias }: 
 }
 
 function flatCats(cats: FinCategoryWithChildren[]): FinCategoryWithChildren[] {
-  return cats.flatMap((c) => [c, ...flatCats(c.children ?? [])]);
+  return cats.flatMap((c) => [c, ...flatCats((c.children ?? []) as unknown as FinCategoryWithChildren[])]);
 }
 
 const overlayStyle: React.CSSProperties = {
