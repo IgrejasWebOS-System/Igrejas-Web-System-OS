@@ -68,7 +68,8 @@ export default async function CamposPage() {
 
       {/* ── Lista interativa ────────────────────────────────────── */}
       <CamposClient
-        campos={campos ?? []}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        campos={(campos ?? []) as any}
         onCriar={criarCampoAction}
         onToggleAtivo={toggleCampoAtivoAction}
       />

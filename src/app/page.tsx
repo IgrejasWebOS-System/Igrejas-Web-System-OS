@@ -75,7 +75,8 @@ export default async function Home() {
           provisioning_jobs ( status )`)
         .order("created_at", { ascending: false })
         .limit(8);
-      campos = (data ?? []) as typeof campos;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      campos = (data ?? []) as any;
     } catch { /* silencioso */ }
   }
 
