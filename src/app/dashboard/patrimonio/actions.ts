@@ -461,7 +461,7 @@ export async function criarRegraDepreciacaoAction(formData: FormData): Promise<v
   const supabase = await createClient();
 
   const { error } = await supabase.from("patrimony_depreciation_rules").insert({
-    ministry_id:      ctx.ministryId,
+    ministry_id:      ctx.ministry_id,
     categoria:        formData.get("categoria") as string,
     tipo_aquisicao:   formData.get("tipo_aquisicao") as string,
     taxa_anual:       parseFloat(formData.get("taxa_anual") as string),
