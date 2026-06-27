@@ -9,10 +9,11 @@ import type {
   CredentialModel,
   CredentialRequestType,
   CredentialSituacao,
+  AdminLevel,
 } from "@/types";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-async function getCtx(minLevel: 0 | 1 | 2 | 3 | 4 = 3) {
+async function getCtx(minLevel: AdminLevel = 3) {
   const ctx = await getAuthContext();
   if (!ctx) throw new Error("Sessão não encontrada.");
   assertLevel(ctx, minLevel, "Sem permissão.");

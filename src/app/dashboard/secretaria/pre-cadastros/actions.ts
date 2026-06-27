@@ -8,9 +8,10 @@ import type {
   PreRegistrationListItem,
   PreRegistration,
   PreRegSituacao,
+  AdminLevel,
 } from "@/types";
 
-async function getCtx(minLevel = 3) {
+async function getCtx(minLevel: AdminLevel = 3) {
   const ctx = await getAuthContext();
   if (!ctx) throw new Error("Sessão não encontrada.");
   assertLevel(ctx, minLevel, "Sem permissão.");
