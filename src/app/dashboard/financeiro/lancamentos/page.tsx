@@ -1,4 +1,5 @@
 import { listarLancamentosAction, listarContasAction, listarCategoriasPlanaAction } from "../actions";
+import type { LancamentosFilter } from "../actions";
 import LancamentosClient from "./LancamentosClient";
 import Link from "next/link";
 
@@ -11,8 +12,8 @@ export default async function LancamentosPage({
 }) {
   const sp = await searchParams;
 
-  const filter = {
-    tipo:       (sp.tipo as "ENTRADA" | "SAIDA" | "") || "",
+  const filter: LancamentosFilter = {
+    tipo:       ((sp.tipo || "") as "ENTRADA" | "SAIDA" | ""),
     account_id: sp.account_id || "",
     category_id: sp.category_id || "",
     status:     sp.status || "",
