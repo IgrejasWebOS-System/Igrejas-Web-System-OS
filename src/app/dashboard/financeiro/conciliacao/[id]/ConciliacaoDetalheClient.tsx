@@ -36,7 +36,7 @@ export default function ConciliacaoDetalheClient({ importacao, linhas: initial, 
     setShowCriar(false);
     if (linha.status === "PENDENTE") {
       const cands = await buscarCandidatosAction(linha.data, linha.valor);
-      setCandidatos(cands as typeof candidatos);
+      setCandidatos(cands as unknown as typeof candidatos);
     }
   }
 
