@@ -60,7 +60,7 @@ export async function listarTurmas(): Promise<{ data: EbdClassListItem[]; error?
 
   const lastCallMap: Record<string, string> = {};
   for (const rc of lastCalls.data ?? []) {
-    if (!(rc as any).class_id in lastCallMap) {
+    if (!((rc as any).class_id in lastCallMap)) {
       lastCallMap[(rc as any).class_id] = (rc as any).data;
     }
   }
