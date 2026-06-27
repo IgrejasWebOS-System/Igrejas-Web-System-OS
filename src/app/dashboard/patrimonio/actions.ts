@@ -421,7 +421,7 @@ export async function dashboardPatrimonioAction(): Promise<PatrimonoDashboardDat
 export async function listarRegrasDepreciacaoAction(): Promise<PatrimonyDepreciationRule[]> {
   const ctx = await getAuthContext();
   assertLevel(ctx, 3);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("patrimony_depreciation_rules")
@@ -441,7 +441,7 @@ export async function buscarTaxaSugeridaAction(
 ): Promise<TaxaDepreciacaoSugerida | null> {
   const ctx = await getAuthContext();
   assertLevel(ctx, 4);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.rpc("buscar_taxa_depreciacao", {
     p_ministry_id: ctx.ministryId,
@@ -458,7 +458,7 @@ export async function buscarTaxaSugeridaAction(
 export async function criarRegraDepreciacaoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
   assertLevel(ctx, 2);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.from("patrimony_depreciation_rules").insert({
     ministry_id:      ctx.ministryId,
@@ -484,7 +484,7 @@ export async function atualizarRegraDepreciacaoAction(
 ): Promise<void> {
   const ctx = await getAuthContext();
   assertLevel(ctx, 2);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase
     .from("patrimony_depreciation_rules")
@@ -506,7 +506,7 @@ export async function atualizarRegraDepreciacaoAction(
 export async function desativarRegraDepreciacaoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
   assertLevel(ctx, 2);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase
     .from("patrimony_depreciation_rules")
