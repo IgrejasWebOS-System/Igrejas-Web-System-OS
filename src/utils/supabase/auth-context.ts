@@ -64,8 +64,13 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   };
 }
 
-// ── Guard de nível — lança se insuficiente ───────────────────────────────────
-export function assertLevel(ctx: AuthContext, maxLevel: AdminLevel, msg?: string): void {
+// ── Guard de nível — lança se null ou insuficiente ───────────────────────────
+export function assertLevel(
+  ctx: AuthContext | null,
+  maxLevel: AdminLevel,
+  msg?: string,
+): asserts ctx is AuthContext {
+  if (!ctx) throw new Error("Sessão não encontrada. Faça login novamente.");
   if (ctx.level > maxLevel) {
     throw new Error(msg ?? `Nível insuficiente: requer ≤ N${maxLevel}, você é N${ctx.level}.`);
   }
