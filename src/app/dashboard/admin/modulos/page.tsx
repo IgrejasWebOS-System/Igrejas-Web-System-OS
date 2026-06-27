@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import type { SessionContext } from "@/types";
+import type { SessionContext, ModuleKey } from "@/types";
 import ModulesGrid from "./ModulesGrid";
 import { toggleModuloAction } from "./actions";
 
@@ -25,7 +25,7 @@ export default async function ModulosPage() {
 
   const activeModules = (rows ?? [])
     .filter((r) => r.is_active)
-    .map((r) => r.module as string);
+    .map((r) => r.module as ModuleKey);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 1000 }}>
