@@ -43,7 +43,7 @@ export default function DisciplinaDetail({ semesterId, disciplina, alunos: init,
   // Matrícula
   const [searchQ, setSearchQ] = useState("");
   const [searchResults, setSearchResults] = useState<{ id: string; nome_completo: string; matricula: string }[]>([]);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   function buscarMembro(q: string) {
     setSearchQ(q);
