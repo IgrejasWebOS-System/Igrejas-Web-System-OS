@@ -53,7 +53,8 @@ export default function NovoLancamentoClient({
     }, 300);
   }
 
-  const categoriasDoTipo = categorias.filter((c) => c.tipo === tipo);
+  const tipoCategoria = tipo === "ENTRADA" ? "RECEITA" : "DESPESA";
+  const categoriasDoTipo = categorias.filter((c) => c.tipo === tipoCategoria);
   const catSelecionada   = categorias.find((c) => c.id === catId);
   const isDizimo = catSelecionada?.fundo === "DIZIMO";
 
