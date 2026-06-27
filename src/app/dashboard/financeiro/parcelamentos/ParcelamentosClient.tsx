@@ -331,7 +331,7 @@ export default function ParcelamentosClient({ planos, contas, categorias }: Prop
 }
 
 function flatCats(cats: FinCategoryWithChildren[]): FinCategoryWithChildren[] {
-  return cats.flatMap((c) => [c, ...flatCats(c.children ?? [])]);
+  return cats.flatMap((c) => [c, ...flatCats((c.children ?? []) as FinCategoryWithChildren[])]);
 }
 
 const overlayStyle: React.CSSProperties = {
