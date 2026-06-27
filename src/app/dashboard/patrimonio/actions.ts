@@ -444,7 +444,7 @@ export async function buscarTaxaSugeridaAction(
   const supabase = await createClient();
 
   const { data, error } = await supabase.rpc("buscar_taxa_depreciacao", {
-    p_ministry_id: ctx.ministryId,
+    p_ministry_id: ctx.ministry_id,
     p_categoria:   categoria,
     p_tipo_aquis:  tipo_aquisicao,
     p_data:        new Date().toISOString().slice(0, 10),
