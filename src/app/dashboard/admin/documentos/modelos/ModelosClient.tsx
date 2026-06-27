@@ -100,7 +100,9 @@ export default function ModelosClient({ modelos: initialModelos }: Props) {
           await criarModeloAction(fd);
           // Reload modelos from server via revalidation — simpler: add optimistically
           setModelos(prev => [...prev, {
-            id: crypto.randomUUID(), ministry_id: "", nome, slug, template_html: templateHtml, is_active: true, created_at: new Date().toISOString(),
+            id: crypto.randomUUID(), ministry_id: "", nome, slug, template_html: templateHtml,
+            is_active: true, created_at: new Date().toISOString(),
+            descricao: null, variaveis_disponiveis: [], requer_assinatura: false, updated_at: new Date().toISOString(),
           }]);
         } else if (modal === "editar" && editando) {
           await editarModeloAction(editando.id, fd);
