@@ -52,9 +52,9 @@ export default async function MeuPerfilPage() {
     <MeuPerfilClient
       party={party as any}
       userEmail={user?.email ?? ""}
-      inscricoes={inscricoes ?? []}
-      documentos={documentos ?? []}
-      certificados={certificados ?? []}
+      inscricoes={(inscricoes ?? []) as any}
+      documentos={(documentos ?? []) as any}
+      certificados={(certificados ?? []) as any}
       ministryName={ctx.ministry_name ?? ""}
     />
   );
