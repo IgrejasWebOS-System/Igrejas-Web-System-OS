@@ -1,13 +1,12 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { getAuthContext }       from "@/utils/supabase/auth-context";
+import { requireAuthContext }       from "@/utils/supabase/auth-context";
 import { buscarTurma, listarAlunosDaTurma, listarChamadas, buscarMembroParaEbd, adicionarAlunoAction, removerAlunoAction } from "../../actions";
 import TurmaDetail from "./TurmaDetail";
 import { EBD_FAIXA_LABELS, DIA_SEMANA_LABELS } from "@/types";
 
 export default async function TurmaPage({ params }: { params: Promise<{ id: string }> }) {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   const { id } = await params;
 

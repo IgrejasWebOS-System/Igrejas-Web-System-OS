@@ -1,12 +1,12 @@
 import { listarCriancasAction, listarTurmasAction, listarCheckinsHojeAction } from "./actions";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import InfantilClient from "./InfantilClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function InfantilPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const sb  = await createClient();
 
   const [criancas, turmas, checkinsHoje, membrosRes] = await Promise.all([

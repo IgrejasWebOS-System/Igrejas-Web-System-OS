@@ -1,11 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import MeuPerfilClient from "./MeuPerfilClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function MeuPerfilPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const sb  = await createClient();
   const { data: { user } } = await sb.auth.getUser();
 

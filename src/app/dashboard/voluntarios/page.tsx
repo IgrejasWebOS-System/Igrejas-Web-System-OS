@@ -1,12 +1,12 @@
 import { listarVoluntariosAction, listarTimesAction, listarEscalasAction } from "./actions";
 import VoluntariosClient from "./VoluntariosClient";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 
 export const dynamic = "force-dynamic";
 
 export default async function VoluntariosPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const sb  = await createClient();
 
   const [voluntarios, times, escalas, membrosRes] = await Promise.all([

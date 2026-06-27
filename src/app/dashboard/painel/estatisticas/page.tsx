@@ -1,5 +1,5 @@
 import { redirect }       from "next/navigation";
-import { getAuthContext }  from "@/utils/supabase/auth-context";
+import { requireAuthContext }  from "@/utils/supabase/auth-context";
 import { buscarStatsUso }  from "../actions";
 
 function UsageCard({
@@ -62,8 +62,7 @@ function UsageCard({
 }
 
 export default async function EstatisticasPage() {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   const stats = await buscarStatsUso();
 

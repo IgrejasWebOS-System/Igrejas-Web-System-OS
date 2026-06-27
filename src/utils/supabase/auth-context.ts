@@ -15,6 +15,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { cookies }      from "next/headers";
+import { redirect }     from "next/navigation";
 import type { AdminLevel, ModuleKey, SessionContext } from "@/types";
 
 // ── Tipo retornado por getAuthContext() ───────────────────────────────────────
@@ -62,6 +63,14 @@ export async function getAuthContext(): Promise<AuthContext | null> {
     ministry_slug: ctx.ministry_slug ?? "",
     modules:       ctx.modules       ?? [],
   };
+}
+
+// ── Versão que redireciona para /login se não autenticado ────────────────────
+// Use em Server Components (pages/layouts) em vez de getAuthContext() + guard manual
+export async function requireAuthContext(): Promise<AuthContext> {
+  const ctx = await getAuthContext();
+  if (!ctx) redirect("/login");
+  return ctx;
 }
 
 // ── Guard de nível — lança se null ou insuficiente ───────────────────────────

@@ -1,5 +1,5 @@
 import { redirect }              from "next/navigation";
-import { getAuthContext }         from "@/utils/supabase/auth-context";
+import { requireAuthContext }         from "@/utils/supabase/auth-context";
 import { buscarStatsSecretaria, buscarAniversariantesDia } from "../actions";
 import type { StatsSecretaria, Aniversariante } from "../actions";
 
@@ -141,8 +141,7 @@ function Card({ title, children, extra }: { title: string; children: React.React
 // ─── Page ────────────────────────────────────────────────────
 
 export default async function SecretariaDashboardPage() {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   const [stats, aniversariantes] = await Promise.all([
     buscarStatsSecretaria(),

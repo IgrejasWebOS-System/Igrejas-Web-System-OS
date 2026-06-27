@@ -1,5 +1,5 @@
 import { redirect }     from "next/navigation";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import PainelTabBar       from "./PainelTabBar";
 
 export default async function PainelLayout({
@@ -7,8 +7,7 @@ export default async function PainelLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 0, maxWidth: 1100 }}>

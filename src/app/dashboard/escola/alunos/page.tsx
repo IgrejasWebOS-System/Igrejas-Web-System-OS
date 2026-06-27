@@ -1,11 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import AlunosClient from "./AlunosClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function AlunosPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const supabase = await createClient();
 
   // Busca todas as parties com role ALUNO no ministério

@@ -1,12 +1,12 @@
 import { listarImportacoesAction } from "./actions";
 import ConciliacaoClient from "./ConciliacaoClient";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 
 export const dynamic = "force-dynamic";
 
 export default async function ConciliacaoPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const sb  = await createClient();
 
   const [importacoes, contasRes] = await Promise.all([

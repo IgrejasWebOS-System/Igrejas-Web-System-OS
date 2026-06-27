@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import ChamadaClient from "./ChamadaClient";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ type Props = { params: Promise<{ semesterId: string; disciplinaId: string; aulaI
 
 export default async function ChamadaPage({ params }: Props) {
   const { semesterId, disciplinaId, aulaId } = await params;
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const supabase = await createClient();
 
   const { data: aula } = await supabase

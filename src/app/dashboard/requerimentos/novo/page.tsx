@@ -1,12 +1,12 @@
 import { listarTiposAction } from "../actions";
 import NovoRequerimentoClient from "./NovoRequerimentoClient";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 
 export const metadata = { title: "Novo Requerimento — IgrejasWeb" };
 
 export default async function NovoRequerimentoPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const tipos = await listarTiposAction().catch(() => []);
 
   // Carregar unidades disponíveis como destino (exceto a própria)

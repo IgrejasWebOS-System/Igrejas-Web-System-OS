@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 
 export default async function TesourariaDashboardPage() {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

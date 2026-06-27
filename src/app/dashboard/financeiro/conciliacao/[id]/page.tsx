@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import { listarLinhasAction } from "../actions";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import ConciliacaoDetalheClient from "./ConciliacaoDetalheClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function ConciliacaoDetalhePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const sb  = await createClient();
 
   const [linhas, impRes, contasRes, catsRes] = await Promise.all([

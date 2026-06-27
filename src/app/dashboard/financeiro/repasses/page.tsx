@@ -1,12 +1,12 @@
 import { listarRepassesAction, listarContasAction } from "../actions";
 import RepassesClient from "./RepassesClient";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 
 export const dynamic = "force-dynamic";
 
 export default async function RepassesPage() {
-  const ctx = await getAuthContext().catch(() => null);
+  const ctx = await requireAuthContext().catch(() => null);
   const supabase = await createClient();
 
   const [repasses, contas] = await Promise.all([

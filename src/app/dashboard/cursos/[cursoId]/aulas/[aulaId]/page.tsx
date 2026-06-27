@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import ChamadaCursoClient from "./ChamadaCursoClient";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export default async function ChamadaCursoPage({
 }) {
   const { cursoId, aulaId } = await params;
 
-  const ctx      = await getAuthContext();
+  const ctx      = await requireAuthContext();
   const supabase = await createClient();
 
   // Buscar aula

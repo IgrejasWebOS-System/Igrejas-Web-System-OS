@@ -1,12 +1,12 @@
 import { listarReunioesAction, listarAtasAction, listarMandatosAction, listarConsentimentosAction, listarAuditLogsAction } from "./actions";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import GovernancaClient from "./GovernancaClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function GovernancaPage() {
-  const ctx = await getAuthContext();
+  const ctx = await requireAuthContext();
   const sb  = await createClient();
 
   const [reunioes, atas, mandatos, consentimentos, auditLogs, membrosRes] = await Promise.all([

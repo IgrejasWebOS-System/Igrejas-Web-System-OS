@@ -1,6 +1,6 @@
 import { listarPatrimonioAction, dashboardPatrimonioAction } from "./actions";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import PatrimonioClient from "./PatrimonioClient";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export default async function PatrimonioPage({
     search:    params.search,
   };
 
-  const ctx = await getAuthContext().catch(() => null);
+  const ctx = await requireAuthContext().catch(() => null);
   const supabase = await createClient();
 
   const [itens, dashData, unidades] = await Promise.all([

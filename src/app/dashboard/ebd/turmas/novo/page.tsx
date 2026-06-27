@@ -1,12 +1,11 @@
 import { createClient }   from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import { redirect }       from "next/navigation";
 import TurmaForm          from "./TurmaForm";
 import { criarTurmaAction, buscarMembroParaEbd } from "../../actions";
 
 export default async function NovaTurmaPage() {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   const supabase = await createClient();
   const { data: units } = await supabase

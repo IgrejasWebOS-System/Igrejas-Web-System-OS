@@ -1,11 +1,10 @@
 import { notFound, redirect } from "next/navigation";
-import { getAuthContext }       from "@/utils/supabase/auth-context";
+import { requireAuthContext }       from "@/utils/supabase/auth-context";
 import { buscarTurma, listarAlunosDaTurma, criarChamadaAction } from "../../../actions";
 import ChamadaForm from "./ChamadaForm";
 
 export default async function ChamadaPage({ params }: { params: Promise<{ id: string }> }) {
-  const ctx = await getAuthContext();
-  if (!ctx) redirect("/login");
+  const ctx = await requireAuthContext();
 
   const { id } = await params;
 

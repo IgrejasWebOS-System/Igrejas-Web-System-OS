@@ -1,6 +1,6 @@
 import { buscarPatrimonyItemAction, listarMovimentosAction, listarDepreciacoesAction } from "../actions";
 import { createClient } from "@/utils/supabase/server";
-import { getAuthContext } from "@/utils/supabase/auth-context";
+import { requireAuthContext } from "@/utils/supabase/auth-context";
 import PatrimonyItemClient from "./PatrimonyItemClient";
 import { notFound } from "next/navigation";
 
@@ -13,7 +13,7 @@ export default async function PatrimonyItemPage({
 }) {
   const { id } = await params;
 
-  const ctx = await getAuthContext().catch(() => null);
+  const ctx = await requireAuthContext().catch(() => null);
   const supabase = await createClient();
 
   try {
