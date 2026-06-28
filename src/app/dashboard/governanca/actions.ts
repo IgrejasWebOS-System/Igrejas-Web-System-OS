@@ -6,7 +6,7 @@ import { getAuthContext, assertLevel } from "@/utils/supabase/auth-context";
 // ── Reuniões ───────────────────────────────────────────────────
 export async function listarReunioesAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb.from("governance_meetings").select("*").eq("ministry_id", ctx.ministry_id).order("data", { ascending: false }).limit(50);
   if (error) throw new Error(error.message);
@@ -15,7 +15,7 @@ export async function listarReunioesAction() {
 
 export async function criarReuniaoAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
   const { error } = await sb.from("governance_meetings").insert({
@@ -34,7 +34,7 @@ export async function criarReuniaoAction(formData: FormData) {
 // ── Atas ─────────────────────────────────────────────────────
 export async function listarAtasAction(meeting_id?: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   let q = sb.from("governance_minutes").select("*, governance_meetings:meeting_id(titulo, data)").eq("ministry_id", ctx.ministry_id).order("created_at", { ascending: false });
   if (meeting_id) q = q.eq("meeting_id", meeting_id);
@@ -45,7 +45,7 @@ export async function listarAtasAction(meeting_id?: string) {
 
 export async function criarAtaAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
   const { error } = await sb.from("governance_minutes").insert({
@@ -71,7 +71,7 @@ export async function aprovarAtaAction(id: string) {
 // ── Mandatos ────────────────────────────────────────────────
 export async function listarMandatosAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb.from("governance_mandates").select("*, parties:party_id(full_name)").eq("ministry_id", ctx.ministry_id).order("inicio", { ascending: false });
   if (error) throw new Error(error.message);
@@ -80,7 +80,7 @@ export async function listarMandatosAction() {
 
 export async function criarMandatoAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { error } = await sb.from("governance_mandates").insert({
     ministry_id: ctx.ministry_id,
@@ -96,7 +96,7 @@ export async function criarMandatoAction(formData: FormData) {
 // ── LGPD ───────────────────────────────────────────────────
 export async function listarConsentimentosAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb.from("lgpd_consents").select("*, parties:party_id(full_name)").eq("ministry_id", ctx.ministry_id).order("created_at", { ascending: false }).limit(200);
   if (error) throw new Error(error.message);
@@ -105,7 +105,7 @@ export async function listarConsentimentosAction() {
 
 export async function revogarConsentimentoAction(id: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { error } = await sb.from("lgpd_consents").update({ consentiu: false, revogado_em: new Date().toISOString() }).eq("id", id).eq("ministry_id", ctx.ministry_id);
   if (error) throw new Error(error.message);
@@ -114,7 +114,7 @@ export async function revogarConsentimentoAction(id: string) {
 // ── Audit Trail ─────────────────────────────────────────────
 export async function listarAuditLogsAction(filtros?: { tabela?: string; limite?: number }) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   let q = sb.from("audit_logs").select("*").eq("ministry_id", ctx.ministry_id).order("created_at", { ascending: false });
   if (filtros?.tabela) q = q.eq("tabela", filtros.tabela);

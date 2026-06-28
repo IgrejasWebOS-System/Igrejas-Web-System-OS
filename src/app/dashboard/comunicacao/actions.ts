@@ -8,7 +8,7 @@ import { SEGMENTOS } from "./constants";
 // ── Templates ─────────────────────────────────────────────────
 export async function listarTemplatesAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb.from("comm_templates").select("*").eq("ministry_id", ctx.ministry_id).eq("ativo", true).order("nome");
   if (error) throw new Error(error.message);
@@ -17,7 +17,7 @@ export async function listarTemplatesAction() {
 
 export async function criarTemplateAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
   const { error } = await sb.from("comm_templates").insert({
@@ -34,7 +34,7 @@ export async function criarTemplateAction(formData: FormData) {
 
 export async function atualizarTemplateAction(id: string, formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { error } = await sb.from("comm_templates").update({
     nome:     formData.get("nome") as string,
@@ -49,7 +49,7 @@ export async function atualizarTemplateAction(id: string, formData: FormData) {
 // ── Campanhas ─────────────────────────────────────────────────
 export async function listarCampanhasAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb
     .from("comm_campaigns")
@@ -63,7 +63,7 @@ export async function listarCampanhasAction() {
 
 export async function criarCampanhaAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
   const segmento    = formData.get("segmento") as string;
@@ -82,7 +82,7 @@ export async function criarCampanhaAction(formData: FormData) {
 
 export async function enviarCampanhaAction(campaign_id: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   // Buscar campanha e template
@@ -134,7 +134,7 @@ export async function enviarCampanhaAction(campaign_id: string) {
 // ── Logs ──────────────────────────────────────────────────────
 export async function listarLogsAction(campaign_id?: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   let q = sb.from("comm_logs").select("*, parties:party_id(full_name)").eq("ministry_id", ctx.ministry_id).order("enviado_em", { ascending: false }).limit(100);
   if (campaign_id) q = q.eq("campaign_id", campaign_id);

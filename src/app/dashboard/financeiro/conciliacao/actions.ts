@@ -7,7 +7,7 @@ import { parseOFX } from "@/utils/ofx-parser";
 // ── Importar arquivo OFX ─────────────────────────────────────
 export async function importarOFXAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
 
@@ -77,7 +77,7 @@ export async function importarOFXAction(formData: FormData) {
 // ── Listar importações ────────────────────────────────────────
 export async function listarImportacoesAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -93,7 +93,7 @@ export async function listarImportacoesAction() {
 // ── Linhas de uma importação ──────────────────────────────────
 export async function listarLinhasAction(import_id: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -111,7 +111,7 @@ export async function listarLinhasAction(import_id: string) {
 // ── Conciliar linha com lançamento existente ──────────────────
 export async function conciliarLinhaAction(line_id: string, transaction_id: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { error } = await sb
@@ -127,7 +127,7 @@ export async function conciliarLinhaAction(line_id: string, transaction_id: stri
 // ── Ignorar linha ─────────────────────────────────────────────
 export async function ignorarLinhaAction(line_id: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { error } = await sb
@@ -143,7 +143,7 @@ export async function ignorarLinhaAction(line_id: string) {
 // ── Criar lançamento a partir da linha ───────────────────────
 export async function criarLancamentoDaLinhaAction(line_id: string, formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
 
@@ -192,7 +192,7 @@ async function _atualizarContadores(sb: Awaited<ReturnType<typeof import("@/util
 // ── Buscar lançamentos candidatos para matching ───────────────
 export async function buscarCandidatosAction(data: string, valor: number) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const tipo = valor > 0 ? "RECEITA" : "DESPESA";

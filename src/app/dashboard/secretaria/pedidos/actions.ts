@@ -14,7 +14,7 @@ import type {
 
 export async function listarMateriaisAction(): Promise<Material[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -29,7 +29,7 @@ export async function listarMateriaisAction(): Promise<Material[]> {
 
 export async function listarMateriaisAtivosAction(): Promise<Material[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -45,7 +45,7 @@ export async function listarMateriaisAtivosAction(): Promise<Material[]> {
 
 export async function criarMaterialAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("materials").insert({
@@ -60,7 +60,7 @@ export async function criarMaterialAction(formData: FormData): Promise<void> {
 
 export async function editarMaterialAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -78,7 +78,7 @@ export async function editarMaterialAction(id: string, formData: FormData): Prom
 
 export async function toggleMaterialAction(id: string, is_active: boolean): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -96,7 +96,7 @@ export async function listarPedidosAction(params?: {
   unit_id?: string;
 }): Promise<MaterialOrderListItem[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   // Usar a view material_orders_with_total
@@ -116,7 +116,7 @@ export async function listarPedidosAction(params?: {
 
 export async function buscarPedidoAction(id: string): Promise<MaterialOrderDetail> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const [orderRes, itemsRes] = await Promise.all([
@@ -153,7 +153,7 @@ export async function criarPedidoAction(
   items: NovoPedidoItem[]
 ): Promise<string> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   if (!items.length) throw new Error("O pedido deve ter ao menos um item");
@@ -194,7 +194,7 @@ export async function mudarSituacaoPedidoAction(
   situacao: OrderSituacao
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -207,7 +207,7 @@ export async function mudarSituacaoPedidoAction(
 
 export async function listarUnidadesAction(): Promise<{ id: string; nome: string }[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase

@@ -1,6 +1,7 @@
 import { getAuthContext } from "@/utils/supabase/auth-context";
 import { createAdminClient } from "@/utils/supabase/admin";
-import QuickLoginPanel from "./QuickLoginPanel";
+import { redirect } from "next/navigation";
+import CriarMinisterioInline from "./CriarMinisterioInline";
 
 // ── Dados estáticos do design system ────────────────────────────────────────
 
@@ -14,8 +15,8 @@ const PALETA = [
 ];
 
 const TIPOGRAFIA = [
-  { cor: "#000000", nome: "Black #000000",      desc: "Bordas e alto contraste" },
-  { cor: "#1C2833", nome: "Smoke #1C2833",      desc: "Títulos e leitura em tela" },
+  { cor: "#000000", nome: "Black #000000",       desc: "Bordas e alto contraste" },
+  { cor: "#1C2833", nome: "Smoke #1C2833",       desc: "Títulos e leitura em tela" },
   { cor: "#333333", nome: "Night Rider #333333", desc: "Corpo de texto e parágrafos" },
 ];
 
@@ -50,35 +51,40 @@ const sectionLabel = (extra: React.CSSProperties = {}): React.CSSProperties => (
 // ── Componente principal ─────────────────────────────────────────────────────
 
 export default async function Home() {
-  // Tenta pegar contexto — não redireciona se não autenticado
+  // ── Roteamento por nível ──────────────────────────────────────────────
   let ctx = null;
-  let campos: Array<{
+  try {
+    ctx = await getAuthContext();
+  } catch { /* não autenticado */ }
+
+  // Não autenticado → login
+  if (!ctx) redirect("/login");
+
+  // N1, N2, N3, N4 → dashboard (contexto já está definido)
+  if (ctx.level > 0) redirect("/dashboard");
+
+  // A partir daqui: apenas N0 (Super-Master)
+  type Campo = {
     id: string; name: string; slug: string; is_active: boolean; created_at: string;
     ministry_branding: { cor_primaria: string; sigla: string } | null;
     ministry_modules: { is_active: boolean }[];
     provisioning_jobs: { status: string }[];
-  }> = [];
+  };
 
+  let campos: Campo[] = [];
   try {
-    ctx = await getAuthContext();
-  } catch { /* não autenticado — ok */ }
-
-  // N0 busca lista de campos
-  if (ctx && ctx.level === 0) {
-    try {
-      const admin = createAdminClient();
-      const { data } = await admin
-        .from("ministries")
-        .select(`id, name, slug, is_active, created_at,
-          ministry_branding ( cor_primaria, sigla ),
-          ministry_modules ( is_active ),
-          provisioning_jobs ( status )`)
-        .order("created_at", { ascending: false })
-        .limit(8);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      campos = (data ?? []) as any;
-    } catch { /* silencioso */ }
-  }
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("ministries")
+      .select(`id, name, slug, is_active, created_at,
+        ministry_branding ( cor_primaria, sigla ),
+        ministry_modules ( is_active ),
+        provisioning_jobs ( status )`)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    campos = (data ?? []) as any;
+  } catch { /* silencioso */ }
 
   const totalCampos  = campos.length;
   const camposAtivos = campos.filter(c => c.is_active).length;
@@ -100,18 +106,25 @@ export default async function Home() {
             </div>
             <div>
               <div style={{ fontSize: 14, fontWeight: 800, color: "var(--color-text-primary)", lineHeight: 1 }}>IgrejasWeb</div>
-              <div style={{ fontSize: 9, color: "var(--color-text-muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>System OS</div>
+              <div style={{ fontSize: 9, color: "var(--color-text-muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>System OS · Dev Console</div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {ctx && (
-              <span style={{ fontSize: 11, color: "var(--color-text-muted)" }}>
-                Logado como <strong style={{ color: "var(--color-text-primary)" }}>{ctx.ministry_name || "Super Master"}</strong>
-              </span>
-            )}
-            <span style={{ fontSize: 10, fontWeight: 700, background: "var(--color-primary-light)", color: "var(--color-primary-dark)", padding: "3px 10px", borderRadius: 99 }}>
-              v4.1 · Dev Console
+            <span style={{ fontSize: 11, color: "var(--color-text-muted)" }}>
+              Sessão: <strong style={{ color: "#ef4444" }}>👑 Super Master</strong>
             </span>
+            <span style={{ fontSize: 10, fontWeight: 700, background: "#fef9c3", color: "#854d0e", padding: "3px 10px", borderRadius: 99 }}>
+              N0
+            </span>
+            <form action="/api/logout" method="POST" style={{ margin: 0 }}>
+              <button type="submit" style={{
+                fontSize: 11, padding: "4px 10px", borderRadius: 6,
+                background: "var(--color-bg)", border: "1px solid var(--color-border)",
+                color: "var(--color-text-muted)", cursor: "pointer",
+              }}>
+                Sair
+              </button>
+            </form>
           </div>
         </div>
       </header>
@@ -202,69 +215,58 @@ export default async function Home() {
                   Ambiente configurado
                 </div>
                 <div style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 2 }}>
-                  39 migrations aplicadas · Next.js 15 · Supabase · Tailwind v4 · Vercel-ready
+                  40 migrations aplicadas · Next.js 15 · Supabase · Tailwind v4 · Vercel-ready
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* ══ COLUNA DIREITA: Acesso + Campos + Identidade Visual ═ */}
+          {/* ══ COLUNA DIREITA: Gestão de Campos + Identidade Visual ══ */}
           <div>
 
-            {/* Login rápido */}
+            {/* Gestão de Campos */}
             <div style={card()}>
-              <div style={sectionLabel({ marginBottom: 14 })}>
-                <span>🔑</span> Acesso ao sistema
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <div style={sectionLabel({ marginBottom: 0 })}>
+                  <span>⛪</span> Gestão de campos
+                  <span style={{ fontSize: 9, fontWeight: 700, background: "#fef9c3", color: "#854d0e", padding: "1px 6px", borderRadius: 99, marginLeft: 4 }}>
+                    N0
+                  </span>
+                </div>
+                <a href="/dashboard/admin/campos" style={{ fontSize: 11, color: "var(--color-primary)", textDecoration: "none", fontWeight: 600 }}>
+                  Painel completo →
+                </a>
               </div>
-              <QuickLoginPanel />
-            </div>
 
-            {/* Gestão de Campos — só para N0 autenticado */}
-            {ctx && ctx.level === 0 ? (
-              <div style={card()}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                  <div style={sectionLabel({ marginBottom: 0 })}>
-                    <span>⛪</span> Gestão de campos
-                    <span style={{ fontSize: 9, fontWeight: 700, background: "#fef9c3", color: "#854d0e", padding: "1px 6px", borderRadius: 99, marginLeft: 4 }}>
-                      N0
-                    </span>
+              {/* Stats */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12 }}>
+                {[
+                  { label: "Total",    value: totalCampos,               color: "var(--color-primary)" },
+                  { label: "Ativos",   value: camposAtivos,              color: "var(--color-success)" },
+                  { label: "Inativos", value: totalCampos - camposAtivos, color: "var(--color-text-muted)" },
+                ].map(s => (
+                  <div key={s.label} style={{ background: "var(--color-bg)", borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
+                    <div style={{ fontSize: 18, fontWeight: 900, color: s.color }}>{s.value}</div>
+                    <div style={{ fontSize: 9, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</div>
                   </div>
-                  <a href="/dashboard/admin/campos" style={{ fontSize: 11, color: "var(--color-primary)", textDecoration: "none", fontWeight: 600 }}>
-                    Ver todos →
-                  </a>
-                </div>
+                ))}
+              </div>
 
-                {/* Stats */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12 }}>
-                  {[
-                    { label: "Total",    value: totalCampos,             color: "var(--color-primary)" },
-                    { label: "Ativos",   value: camposAtivos,            color: "var(--color-success)" },
-                    { label: "Inativos", value: totalCampos - camposAtivos, color: "var(--color-text-muted)" },
-                  ].map(s => (
-                    <div key={s.label} style={{ background: "var(--color-bg)", borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
-                      <div style={{ fontSize: 18, fontWeight: 900, color: s.color }}>{s.value}</div>
-                      <div style={{ fontSize: 9, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Tabela de campos */}
-                {campos.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "20px 0", color: "var(--color-text-muted)", fontSize: 12 }}>
-                    Nenhum campo cadastrado. <a href="/dashboard/admin/campos" style={{ color: "var(--color-primary)" }}>Criar primeiro campo →</a>
-                  </div>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {campos.map(c => {
-                      const b = c.ministry_branding;
-                      const modAtivos = c.ministry_modules.filter(m => m.is_active).length;
-                      const job = c.provisioning_jobs?.[0];
-                      return (
-                        <div key={c.id} style={{
+              {/* Lista de campos */}
+              {campos.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
+                  {campos.map(c => {
+                    const b = c.ministry_branding;
+                    const modAtivos = c.ministry_modules.filter(m => m.is_active).length;
+                    const job = c.provisioning_jobs?.[0];
+                    return (
+                      <a key={c.id} href={`/dashboard/admin/campos/${c.id}`} style={{ textDecoration: "none" }}>
+                        <div style={{
                           display: "flex", alignItems: "center", gap: 10,
                           padding: "8px 10px", borderRadius: 8,
                           background: "var(--color-bg)", border: "1px solid var(--color-border)",
+                          transition: "border-color 0.15s",
                         }}>
                           <div style={{
                             width: 28, height: 28, borderRadius: 6, flexShrink: 0,
@@ -294,41 +296,15 @@ export default async function Home() {
                             )}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
 
-                <div style={{ marginTop: 10 }}>
-                  <a
-                    href="/dashboard/admin/campos"
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                      padding: "8px", borderRadius: 8,
-                      border: "1px dashed var(--color-primary-muted)",
-                      color: "var(--color-primary)", fontSize: 12, fontWeight: 600,
-                      textDecoration: "none", background: "var(--color-primary-light)" + "40",
-                    }}
-                  >
-                    + Provisionar novo campo
-                  </a>
-                </div>
-              </div>
-            ) : !ctx ? (
-              /* Não autenticado — mostra teaser da feature */
-              <div style={card({ background: "var(--color-bg)", border: "1px dashed var(--color-border)" })}>
-                <div style={sectionLabel()}>
-                  <span>⛪</span> Gestão de campos
-                  <span style={{ fontSize: 9, fontWeight: 700, background: "#fef9c3", color: "#854d0e", padding: "1px 6px", borderRadius: 99, marginLeft: 4 }}>
-                    Requer N0
-                  </span>
-                </div>
-                <p style={{ fontSize: 11, color: "var(--color-text-muted)", lineHeight: 1.5, margin: 0 }}>
-                  Entre como Super Master para provisionar e gerenciar campos da plataforma.
-                  Cada novo campo recebe sistema completo automaticamente.
-                </p>
-              </div>
-            ) : null}
+              {/* Formulário inline de criação de campo */}
+              <CriarMinisterioInline />
+            </div>
 
             {/* Identidade Visual Padrão */}
             <div style={card()}>
@@ -336,11 +312,9 @@ export default async function Home() {
                 <div style={sectionLabel({ marginBottom: 0 })}>
                   <span>🎨</span> Identidade visual padrão
                 </div>
-                {ctx && (
-                  <a href="/dashboard/configuracoes" style={{ fontSize: 11, color: "var(--color-primary)", textDecoration: "none", fontWeight: 600 }}>
-                    Editar →
-                  </a>
-                )}
+                <a href="/dashboard/configuracoes" style={{ fontSize: 11, color: "var(--color-primary)", textDecoration: "none", fontWeight: 600 }}>
+                  Editar →
+                </a>
               </div>
 
               {/* Preview */}

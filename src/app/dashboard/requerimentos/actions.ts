@@ -28,7 +28,7 @@ export async function listarTiposAction(): Promise<ReqType[]> {
 
 export async function criarTipoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("req_types").insert({
@@ -42,7 +42,7 @@ export async function criarTipoAction(formData: FormData): Promise<void> {
 
 export async function editarTipoAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -59,7 +59,7 @@ export async function editarTipoAction(id: string, formData: FormData): Promise<
 
 export async function toggleTipoAction(id: string, is_active: boolean): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -194,7 +194,7 @@ export async function buscarRequisicaoAction(id: string): Promise<RequisitionDet
 
 export async function criarRequisicaoAction(formData: FormData): Promise<string> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   if (!ctx.unit_id) throw new Error("Unidade não definida no contexto");
   const supabase = await createClient();
 
@@ -236,7 +236,7 @@ export async function responderRequisicaoAction(
   resposta: string
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   if (!ctx.unit_id) throw new Error("Unidade não definida no contexto");
   const supabase = await createClient();
 
@@ -257,7 +257,7 @@ export async function responderRequisicaoAction(
 
 export async function arquivarRequisicaoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   if (!ctx.unit_id) throw new Error("Unidade não definida no contexto");
   const supabase = await createClient();
 

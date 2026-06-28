@@ -83,7 +83,7 @@ export async function buscarSemestreAction(id: string): Promise<SchoolSemester> 
 
 export async function criarSemestreAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("school_semesters").insert({
@@ -98,7 +98,7 @@ export async function criarSemestreAction(formData: FormData): Promise<void> {
 
 export async function editarSemestreAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -115,7 +115,7 @@ export async function editarSemestreAction(id: string, formData: FormData): Prom
 
 export async function toggleSemestreAction(id: string, is_active: boolean): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -227,7 +227,7 @@ export async function criarDisciplinaAction(
   formData: FormData
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("school_disciplines").insert({
@@ -244,7 +244,7 @@ export async function criarDisciplinaAction(
 
 export async function editarDisciplinaAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -280,7 +280,7 @@ export async function listarAulasAction(discipline_id: string): Promise<SchoolLe
 
 export async function criarAulaAction(discipline_id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   // próximo número de aula
@@ -336,7 +336,7 @@ export async function buscarMembrosAction(
 ): Promise<{ id: string; nome_completo: string; matricula: string }[]> {
   if (!q.trim()) return [];
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data: parties } = await supabase
@@ -473,7 +473,7 @@ export async function matricularAlunoAction(
   party_id: string
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   // Inserir matrícula
@@ -514,7 +514,7 @@ export async function matricularAlunoAction(
 
 export async function cancelarMatriculaAction(enrollment_id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -533,7 +533,7 @@ export async function lancarNotaAction(
   nota: number
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   // Buscar ministry_id da matrícula
@@ -559,7 +559,7 @@ export async function lancarNotaAction(
 export async function recalcularSituacaoAction(enrollment_id: string): Promise<void> {
   const supabase = await createClient();
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
 
   const { data: situacao } = await supabase.rpc("calcular_situacao_matricula", {
     p_enrollment_id: enrollment_id,
@@ -597,7 +597,7 @@ export async function salvarPresencaAction(
   presente: boolean
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data: att } = await supabase

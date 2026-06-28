@@ -25,6 +25,8 @@ export type AuthContext = {
   ministry_id: string;
   unit_id:     string | null;
   level:       AdminLevel;
+  // ── Sub-papel descritivo (origem: admin_roles) — apenas visual ──
+  role_title:  string | null;
   // ── Dados de apresentação (origem: cookie — apenas UI) ────────
   ministry_name: string;
   ministry_slug: string;
@@ -54,11 +56,26 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   const raw = cookieStore.get("iw_context")?.value;
   const ctx: Partial<SessionContext> = raw ? (JSON.parse(raw) as SessionContext) : {};
 
+  // role_title — sub-papel descritivo (secretario, tesoureiro, etc.)
+  // Lido do banco para garantir dado fresco; falha silenciosa → null
+  let roleTitle: string | null = null;
+  try {
+    const { data: roleRow } = await supabase
+      .from("admin_roles")
+      .select("role_title")
+      .eq("user_id", user.id)
+      .eq("ministry_id", ministryId)
+      .eq("is_active", true)
+      .maybeSingle();
+    roleTitle = (roleRow as { role_title?: string | null } | null)?.role_title ?? null;
+  } catch { /* silencioso */ }
+
   return {
     user_id:       user.id,
     ministry_id:   ministryId,
     unit_id:       unitId,
     level,
+    role_title:    roleTitle,
     ministry_name: ctx.ministry_name ?? "",
     ministry_slug: ctx.ministry_slug ?? "",
     modules:       ctx.modules       ?? [],

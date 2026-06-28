@@ -39,13 +39,10 @@ export default function Header({ ctx }: Props) {
     ?? "Dashboard";
   const levelColor = LEVEL_COLOR[ctx.level];
 
-  // Iniciais do ministério para avatar
-  const initials = ctx.ministry_name
-    .split(" ")
-    .slice(0, 2)
-    .map(w => w[0])
-    .join("")
-    .toUpperCase();
+  // Data formatada (client-side para evitar hidration mismatch)
+  const today = new Date().toLocaleDateString("pt-BR", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric",
+  });
 
   return (
     <header style={{
@@ -64,19 +61,39 @@ export default function Header({ ctx }: Props) {
       boxShadow: "0 1px 3px rgba(44,82,130,.06)",
     }}>
 
-      {/* ── Esquerda: breadcrumb ─────────────────────────────── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 11, color: "var(--color-text-muted)", fontWeight: 500 }}>
+      {/* ── Esquerda: nome do ministério (fonte maior) + página ── */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+        <span style={{
+          fontSize: 15, fontWeight: 800,
+          color: "var(--color-text-primary)",
+          whiteSpace: "nowrap",
+        }}>
           {ctx.ministry_name}
         </span>
-        <span style={{ color: "var(--color-border)", fontSize: 14 }}>›</span>
-        <span style={{ fontSize: 14, fontWeight: 700, color: "var(--color-text-primary)" }}>
+        <span style={{ color: "var(--color-border)", fontSize: 16, flexShrink: 0 }}>›</span>
+        <span style={{
+          fontSize: 14, fontWeight: 600,
+          color: "var(--color-text-muted)",
+          whiteSpace: "nowrap",
+        }}>
           {pageTitle}
         </span>
       </div>
 
-      {/* ── Direita: badges + avatar ─────────────────────────── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      {/* ── Direita: data · badge nível · badge slug · ● Online ── */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+
+        {/* Data */}
+        <span style={{
+          fontSize: 11, color: "var(--color-text-muted)",
+          fontWeight: 500, textTransform: "capitalize",
+          whiteSpace: "nowrap",
+        }}>
+          {today}
+        </span>
+
+        {/* Separador */}
+        <span style={{ width: 1, height: 18, background: "var(--color-border)", flexShrink: 0 }} />
 
         {/* Badge de nível */}
         <div style={{
@@ -87,12 +104,9 @@ export default function Header({ ctx }: Props) {
           borderRadius: 99,
           fontSize: 11, fontWeight: 700,
           color: levelColor,
-          letterSpacing: "0.03em",
+          whiteSpace: "nowrap",
         }}>
-          <span style={{
-            width: 6, height: 6, borderRadius: "50%",
-            background: levelColor, flexShrink: 0,
-          }} />
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: levelColor, flexShrink: 0 }} />
           {LEVEL_LABEL[ctx.level]}
         </div>
 
@@ -105,22 +119,19 @@ export default function Header({ ctx }: Props) {
           fontSize: 11, fontWeight: 600,
           color: "var(--color-text-muted)",
           fontFamily: "monospace",
+          whiteSpace: "nowrap",
         }}>
           @{ctx.ministry_slug}
         </div>
 
-        {/* Avatar */}
-        <div style={{
-          width: 34, height: 34,
-          background: "var(--color-primary)",
-          borderRadius: 10,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          color: "#fff", fontSize: 12, fontWeight: 800,
-          flexShrink: 0,
-          boxShadow: "0 2px 6px rgba(74,125,181,.3)",
-          letterSpacing: "-0.5px",
-        }}>
-          {initials}
+        {/* ● Online — extremo direito */}
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{
+            width: 7, height: 7, borderRadius: "50%", flexShrink: 0,
+            background: "#4ade80",
+            boxShadow: "0 0 5px #4ade80",
+          }} />
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#16a34a" }}>Online</span>
         </div>
       </div>
     </header>

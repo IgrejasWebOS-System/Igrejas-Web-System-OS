@@ -104,7 +104,7 @@ export async function criarTurmaAction(payload: {
 }): Promise<{ data?: EbdClass; error?: string }> {
   const ctx = await getAuthContext();
   if (!ctx) return { error: "Sessão não encontrada." };
-  try { assertLevel(ctx, 3, "Apenas N0–N3 podem criar turmas."); }
+  try { assertLevel(ctx, 4, "Apenas N0–N4 podem criar turmas."); }
   catch (e: any) { return { error: e.message }; }
 
   const supabase = await createClient();
@@ -142,7 +142,7 @@ export async function atualizarTurmaAction(
 ): Promise<{ error?: string }> {
   const ctx = await getAuthContext();
   if (!ctx) return { error: "Sessão não encontrada." };
-  try { assertLevel(ctx, 3); } catch (e: any) { return { error: e.message }; }
+  try { assertLevel(ctx, 4); } catch (e: any) { return { error: e.message }; }
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -251,7 +251,7 @@ export async function adicionarAlunoAction(
 ): Promise<{ error?: string }> {
   const ctx = await getAuthContext();
   if (!ctx) return { error: "Sessão não encontrada." };
-  try { assertLevel(ctx, 3); } catch (e: any) { return { error: e.message }; }
+  try { assertLevel(ctx, 4); } catch (e: any) { return { error: e.message }; }
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -276,7 +276,7 @@ export async function removerAlunoAction(
 ): Promise<{ error?: string }> {
   const ctx = await getAuthContext();
   if (!ctx) return { error: "Sessão não encontrada." };
-  try { assertLevel(ctx, 3); } catch (e: any) { return { error: e.message }; }
+  try { assertLevel(ctx, 4); } catch (e: any) { return { error: e.message }; }
 
   const supabase = await createClient();
   const { error } = await supabase

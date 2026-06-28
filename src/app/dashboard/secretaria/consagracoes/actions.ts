@@ -17,7 +17,7 @@ export async function listarConsagracoesAction(params?: {
   type_id?: string;
 }): Promise<ConsecrationListItem[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -72,7 +72,7 @@ export async function listarConsagracoesAction(params?: {
 
 export async function carregarLookupsConsagracao(): Promise<ConsecrationLookup> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const [typesRes, sitRes, cargosRes, unitsRes] = await Promise.all([
@@ -92,7 +92,7 @@ export async function carregarLookupsConsagracao(): Promise<ConsecrationLookup> 
 
 export async function criarConsagracaoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {
@@ -124,7 +124,7 @@ export async function atualizarSituacaoConsagracaoAction(
   data_consagracao?: string
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {
@@ -143,7 +143,7 @@ export async function atualizarSituacaoConsagracaoAction(
 
 export async function aprovarConsagracaoAction(id: string, data_consagracao: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   // Buscar processo para pegar cargo_pleiteado_id e party_id
@@ -198,7 +198,7 @@ export async function aprovarConsagracaoAction(id: string, data_consagracao: str
 
 export async function editarConsagracaoAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {};

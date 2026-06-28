@@ -61,7 +61,7 @@ export async function listarContasAction(): Promise<FinAccountWithSaldo[]> {
 
 export async function criarContaAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("fin_accounts").insert({
@@ -81,7 +81,7 @@ export async function criarContaAction(formData: FormData): Promise<void> {
 
 export async function editarContaAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -142,7 +142,7 @@ export async function listarCategoriasPlanaAction(): Promise<FinCategory[]> {
 
 export async function criarCategoriaAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("fin_categories").insert({
@@ -189,7 +189,7 @@ export async function listarLookupFinAction(): Promise<{
 
 export async function listarPeriodosAction(): Promise<FinPeriod[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -204,7 +204,7 @@ export async function listarPeriodosAction(): Promise<FinPeriod[]> {
 
 export async function abrirPeriodoAction(mes: number, ano: number, unit_id: string | null): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   // Buscar saldo_final do período anterior para usar como saldo_inicial
@@ -231,7 +231,7 @@ export async function abrirPeriodoAction(mes: number, ano: number, unit_id: stri
 
 export async function fecharPeriodoAction(period_id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   // Calcular saldo final de todas as contas do ministério
@@ -355,7 +355,7 @@ export async function listarLancamentosAction(
 
 export async function criarLancamentoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -387,7 +387,7 @@ export async function criarLancamentoAction(formData: FormData): Promise<void> {
 
 export async function aprovarLancamentoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -406,7 +406,7 @@ export async function aprovarLancamentoAction(id: string): Promise<void> {
 
 export async function rejeitarLancamentoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { data: tx } = await supabase.from("fin_transactions").select("status").eq("id", id).single();
@@ -422,7 +422,7 @@ export async function rejeitarLancamentoAction(id: string): Promise<void> {
 
 export async function estornarLancamentoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -462,7 +462,7 @@ export async function estornarLancamentoAction(id: string): Promise<void> {
 
 export async function softDeleteLancamentoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -478,7 +478,7 @@ export async function softDeleteLancamentoAction(id: string): Promise<void> {
 
 export async function listarTransferenciasAction(): Promise<FinTransferListItem[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -507,7 +507,7 @@ export async function listarTransferenciasAction(): Promise<FinTransferListItem[
 
 export async function criarTransferenciaAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -582,7 +582,7 @@ export async function listarChartOfAccountsPlanaAction(
 
 export async function criarChartAccountAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const parent_id = (formData.get("parent_id") as string) || null;
@@ -614,7 +614,7 @@ export async function criarChartAccountAction(formData: FormData): Promise<void>
 
 export async function toggleChartAccountAction(id: string, is_active: boolean): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -632,7 +632,7 @@ export async function buscarMembrosParaLancamentoAction(
 ): Promise<{ id: string; nome_completo: string; matricula: string }[]> {
   if (!q.trim()) return [];
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data: parties } = await supabase
@@ -841,7 +841,7 @@ export async function buscarProjetoAction(id: string): Promise<FinProjectWithSta
 
 export async function criarProjetoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const orcamento = formData.get("orcamento_total") ? parseFloat(formData.get("orcamento_total") as string) : null;
@@ -863,7 +863,7 @@ export async function criarProjetoAction(formData: FormData): Promise<void> {
 
 export async function atualizarStatusProjetoAction(id: string, status: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const update: Record<string, any> = { status };
@@ -944,7 +944,7 @@ export async function buscarParcelasAction(plan_id: string): Promise<FinInstallm
 
 export async function criarParcelamentoAction(formData: FormData): Promise<string> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -987,7 +987,7 @@ export async function criarParcelamentoAction(formData: FormData): Promise<strin
 
 export async function pagarParcelaAction(installmentId: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -1079,7 +1079,7 @@ export async function listarRecorrentesAction(): Promise<FinRecurringListItem[]>
 
 export async function criarRecorrenteAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -1111,7 +1111,7 @@ export async function criarRecorrenteAction(formData: FormData): Promise<void> {
 
 export async function gerarLancamentoRecorrenteAction(recurringId: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -1157,7 +1157,7 @@ export async function gerarLancamentoRecorrenteAction(recurringId: string): Prom
 
 export async function toggleRecorrenteAction(id: string, status: "ATIVO" | "PAUSADO" | "ENCERRADO"): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -1215,7 +1215,7 @@ export async function listarRepassesAction(): Promise<FinUnitRepasseListItem[]> 
 
 export async function criarRepasseAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -1246,7 +1246,7 @@ export async function criarRepasseAction(formData: FormData): Promise<void> {
 
 export async function executarRepasseAction(repasseId: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -1295,7 +1295,7 @@ export async function listarRegrasRepasseAction(): Promise<FinRepasseRule[]> {
 
 export async function criarRegraRepasseAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const unit_from_id = formData.get("unit_from_id") as string;

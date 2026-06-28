@@ -16,7 +16,7 @@ export async function listarOcorrenciasAction(filtros?: {
 }): Promise<Occurrence[]> {
   const ctx = await getAuthContext();
   // N3 pode ver NORMAL; N2+ pode ver RESTRITO também (filtro no app)
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   let q = sb
@@ -53,7 +53,7 @@ export async function listarOcorrenciasAction(filtros?: {
 // ── Buscar ocorrência por ID ──────────────────────────────────
 export async function buscarOcorrenciaAction(id: string): Promise<Occurrence | null> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -86,7 +86,7 @@ export async function buscarOcorrenciaAction(id: string): Promise<Occurrence | n
 // ── Criar ocorrência ──────────────────────────────────────────
 export async function criarOcorrenciaAction(formData: FormData): Promise<string> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const nivel_sigilo = formData.get("nivel_sigilo") as string;
@@ -120,7 +120,7 @@ export async function criarOcorrenciaAction(formData: FormData): Promise<string>
 // ── Atualizar ocorrência ──────────────────────────────────────
 export async function atualizarOcorrenciaAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { error } = await sb
@@ -146,7 +146,7 @@ export async function mudarStatusOcorrenciaAction(
   resolucao?: string
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { error } = await sb
@@ -161,7 +161,7 @@ export async function mudarStatusOcorrenciaAction(
 // ── Arquivar / soft delete ────────────────────────────────────
 export async function arquivarOcorrenciaAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { error } = await sb
@@ -176,7 +176,7 @@ export async function arquivarOcorrenciaAction(id: string): Promise<void> {
 // ── Listar acompanhamentos ────────────────────────────────────
 export async function listarFollowupsAction(occurrence_id: string): Promise<OccurrenceFollowup[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -193,7 +193,7 @@ export async function listarFollowupsAction(occurrence_id: string): Promise<Occu
 // ── Registrar acompanhamento ──────────────────────────────────
 export async function registrarFollowupAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const occurrence_id = formData.get("occurrence_id") as string;

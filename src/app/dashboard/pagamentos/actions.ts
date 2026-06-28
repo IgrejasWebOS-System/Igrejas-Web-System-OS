@@ -5,7 +5,7 @@ import { getAuthContext, assertLevel } from "@/utils/supabase/auth-context";
 
 export async function listarGatewaysAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb.from("payment_gateways").select("id, provider, ativo, test_mode, config, created_at").eq("ministry_id", ctx.ministry_id);
   if (error) throw new Error(error.message);
@@ -14,7 +14,7 @@ export async function listarGatewaysAction() {
 
 export async function configurarGatewayAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const provider = formData.get("provider") as string;
@@ -35,7 +35,7 @@ export async function configurarGatewayAction(formData: FormData) {
 
 export async function listarPedidosAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const { data, error } = await sb
     .from("payment_orders")

@@ -6,7 +6,7 @@ import type { MemberBankAccount } from "@/types";
 
 export async function listarContasAction(party_id: string): Promise<MemberBankAccount[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -22,7 +22,7 @@ export async function listarContasAction(party_id: string): Promise<MemberBankAc
 
 export async function criarContaAction(party_id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const isPrincipal = formData.get("is_principal") === "true";
@@ -51,7 +51,7 @@ export async function criarContaAction(party_id: string, formData: FormData): Pr
 
 export async function editarContaAction(id: string, party_id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const isPrincipal = formData.get("is_principal") === "true";
@@ -82,7 +82,7 @@ export async function editarContaAction(id: string, party_id: string, formData: 
 
 export async function excluirContaAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase

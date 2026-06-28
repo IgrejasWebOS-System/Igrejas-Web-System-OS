@@ -8,7 +8,7 @@ import { AREAS } from "./constants";
 // ── Voluntários ───────────────────────────────────────────────
 export async function listarVoluntariosAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { data, error } = await sb
     .from("volunteer_profiles")
@@ -22,7 +22,7 @@ export async function listarVoluntariosAction() {
 
 export async function cadastrarVoluntarioAction(party_id: string, areas: string[], disponibilidade: string, observacoes: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { error } = await sb.from("volunteer_profiles").upsert({
     ministry_id: ctx.ministry_id, party_id, areas, disponibilidade, observacoes, ativo: true,
@@ -32,7 +32,7 @@ export async function cadastrarVoluntarioAction(party_id: string, areas: string[
 
 export async function desativarVoluntarioAction(id: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { error } = await sb.from("volunteer_profiles").update({ ativo: false }).eq("id", id).eq("ministry_id", ctx.ministry_id);
   if (error) throw new Error(error.message);
@@ -41,7 +41,7 @@ export async function desativarVoluntarioAction(id: string) {
 // ── Times ─────────────────────────────────────────────────────
 export async function listarTimesAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { data, error } = await sb
     .from("ministry_teams")
@@ -54,7 +54,7 @@ export async function listarTimesAction() {
 
 export async function criarTimeAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { error } = await sb.from("ministry_teams").insert({
     ministry_id: ctx.ministry_id,
@@ -69,7 +69,7 @@ export async function criarTimeAction(formData: FormData) {
 // ── Escalas ───────────────────────────────────────────────────
 export async function listarEscalasAction(team_id?: string) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   let q = sb
     .from("service_schedules")
@@ -85,7 +85,7 @@ export async function listarEscalasAction(team_id?: string) {
 
 export async function criarEscalaAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();
   const { data: esc, error } = await sb.from("service_schedules").insert({

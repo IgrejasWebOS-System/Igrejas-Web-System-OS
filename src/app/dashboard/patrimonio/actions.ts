@@ -126,7 +126,7 @@ export async function buscarPatrimonyItemAction(id: string): Promise<PatrimonyIt
 
 export async function criarPatrimonyItemAction(formData: FormData): Promise<string> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   // Gerar número de tombamento
@@ -185,7 +185,7 @@ export async function criarPatrimonyItemAction(formData: FormData): Promise<stri
 
 export async function atualizarPatrimonyItemAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const valor_aquisicao = parseFloat(formData.get("valor_aquisicao") as string);
@@ -215,7 +215,7 @@ export async function atualizarPatrimonyItemAction(id: string, formData: FormDat
 
 export async function registrarMovimentoAction(itemId: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const tipo = formData.get("tipo") as string;
@@ -279,7 +279,7 @@ export async function listarMovimentosAction(itemId: string): Promise<PatrimonyM
 
 export async function registrarDepreciacaoAction(itemId: string, ano: number, mes: number): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   // Buscar item
@@ -338,7 +338,7 @@ export async function listarDepreciacoesAction(itemId: string): Promise<Patrimon
 
 export async function softDeletePatrimonyItemAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -420,7 +420,7 @@ export async function dashboardPatrimonioAction(): Promise<PatrimonoDashboardDat
 /** Lista todas as regras vigentes (globais + do ministério do usuário) */
 export async function listarRegrasDepreciacaoAction(): Promise<PatrimonyDepreciationRule[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -457,7 +457,7 @@ export async function buscarTaxaSugeridaAction(
 /** Cria uma nova regra de depreciação específica para o ministério */
 export async function criarRegraDepreciacaoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("patrimony_depreciation_rules").insert({
@@ -483,7 +483,7 @@ export async function atualizarRegraDepreciacaoAction(
   formData: FormData,
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -505,7 +505,7 @@ export async function atualizarRegraDepreciacaoAction(
 /** Desativa uma regra (soft delete — mantém histórico) */
 export async function desativarRegraDepreciacaoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase

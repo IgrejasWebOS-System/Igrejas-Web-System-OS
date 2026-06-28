@@ -115,6 +115,7 @@ export type AdminRole = {
   ministry_id: string | null;
   unit_id: string | null;
   level: AdminLevel;
+  role_title: string | null;
   is_active: boolean;
   created_at: string;
   ministries?: Ministry;

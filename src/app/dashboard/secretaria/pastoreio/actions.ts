@@ -12,7 +12,7 @@ import type {
 
 export async function listarGruposAction(): Promise<PastoralGroupListItem[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data: groups, error } = await supabase
@@ -53,7 +53,7 @@ export async function listarGruposAction(): Promise<PastoralGroupListItem[]> {
 
 export async function buscarGrupoAction(id: string): Promise<PastoralGroupDetail> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const { data: group, error } = await supabase
@@ -101,7 +101,7 @@ export async function buscarGrupoAction(id: string): Promise<PastoralGroupDetail
 
 export async function criarGrupoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {
@@ -121,7 +121,7 @@ export async function criarGrupoAction(formData: FormData): Promise<void> {
 
 export async function editarGrupoAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {
@@ -144,7 +144,7 @@ export async function editarGrupoAction(id: string, formData: FormData): Promise
 
 export async function toggleGrupoAction(id: string, is_active: boolean): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -164,7 +164,7 @@ export async function adicionarMembroGrupoAction(
   observacoes?: string | null
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase.from("pastoral_group_members").insert({
@@ -179,7 +179,7 @@ export async function adicionarMembroGrupoAction(
 
 export async function removerMembroGrupoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -192,7 +192,7 @@ export async function removerMembroGrupoAction(id: string): Promise<void> {
 
 export async function atualizarVpdAction(id: string, vpd: number | null): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase

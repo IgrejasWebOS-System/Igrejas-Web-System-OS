@@ -215,15 +215,15 @@
       <span>Versão 4.1</span> · <span>Junho 2026</span> · <span>24 Fases + Enterprise</span> · <span>Confidencial</span>
     </div>
     <div class="cover-progress">
-      <div class="cover-progress-label">Progresso Geral — Plataforma completa v4.1 · Pós-deploy estabilizada</div>
+      <div class="cover-progress-label">Progresso Geral — Plataforma completa v4.2 · RBAC Redesign aplicado</div>
       <div class="cover-progress-bar"><div class="cover-progress-fill" style="width:100%"></div></div>
-      <div class="cover-progress-label" style="color:#16a34a">✅ 42 entregas concluídas · 🔒 Segurança enterprise · 🌐 API Pública · 📱 PWA · 🤖 Automações · 🏛️ Governança LGPD · 🐛 Runtime fixes aplicados · 🚀 Pronto para Vercel</div>
+      <div class="cover-progress-label" style="color:#16a34a">✅ 46 entregas concluídas · 🔒 Segurança enterprise · 🌐 API Pública · 📱 PWA · 🤖 Automações · 🏛️ Governança LGPD · 🐛 Runtime fixes aplicados · 👑 RBAC N3/N4 redesign · 🚀 Pronto para Vercel</div>
     </div>
   </div>
 
   <!-- STATUS TRACKER -->
   <div class="status-bar">
-    <h2>📊 Status de Desenvolvimento — Atualizado em 26/06/2026 · v4.1 — Pós-deploy</h2>
+    <h2>📊 Status de Desenvolvimento — Atualizado em 28/06/2026 · v4.2 — RBAC Redesign</h2>
 
     <div class="status-group">
       <div class="status-group-label">Fase 0 — Fundação (concluída)</div>
@@ -325,6 +325,19 @@
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Fase 16 — API Pública REST + API Keys + Webhooks + OpenAPI</span></div>
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Fase 16B — Config Global + Comunicados + Automações + Cron</span></div>
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Fase 17 — PWA: manifest.json + Service Worker + Web Push</span></div>
+      </div>
+    </div>
+
+    <div class="status-group">
+      <div class="status-group-label">v4.2 — RBAC Redesign + Roteamento + role_title (28/06/2026)</div>
+      <div class="status-grid">
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Migration 040 — role_title em admin_roles</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Types — AdminRole + AuthContext com role_title</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Roteamento automático por nível (/ → login/dashboard/console)</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Console N0 — sem login panel + criação inline de ministério</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ N3 = Master Setor (plenos poderes em 20+ módulos)</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ N4 = Master Igreja (plenos poderes na sua unidade)</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Secretário + Tesoureiro como N4 com role_title</span></div>
       </div>
     </div>
   </div>
@@ -3219,17 +3232,152 @@
     </div>
   </div>
 
+  <!-- v4.2 RBAC REDESIGN + ROTEAMENTO + ROLE_TITLE -->
+  <div class="section">
+    <h1 class="sec">v4.2 — RBAC Redesign + Roteamento + role_title (28/06/2026)</h1>
+    <p>Implementação do redesign de permissões N3/N4 com "plenos poderes" por escopo, roteamento automático por nível de acesso, console N0 renovado e campo <code>role_title</code> para sub-papéis descritivos (secretário, tesoureiro).</p>
+
+    <div class="fase-header done" style="margin-top:0">
+      <div class="fase-num">v4.2-A</div>
+      <div class="fase-title">Migration 040 — role_title em admin_roles</div>
+      <div class="fase-badges"><span class="fase-badge">✅ Implementado</span><span class="fase-badge">1 migration</span></div>
+    </div>
+    <p>Nova coluna <code>role_title varchar(50) NULL</code> na tabela <code>admin_roles</code>. Permite identificar sub-papéis descritivos dentro de um mesmo nível de acesso, sem alterar hierarquia de permissões.</p>
+    <div class="db-table">
+      <div class="tb-name">admin_roles.role_title — Valores convencionados</div>
+      <div class="tb-cols">
+        <span>N4 + role_title = NULL</span>         → <span class="col-type">Pastor / Líder Local (padrão)</span><br>
+        <span>N4 + role_title = 'secretario'</span>  → <span class="col-type">Secretário da Igreja</span><br>
+        <span>N4 + role_title = 'tesoureiro'</span>  → <span class="col-type">Tesoureiro da Igreja</span><br>
+        <span>N4 + role_title = 'pastor_local'</span>→ <span class="col-type">Pastor Local (explícito)</span><br>
+        <span>N3 + role_title = NULL</span>          → <span class="col-type">Admin Setor (padrão)</span>
+      </div>
+      <div class="tb-note">role_title é apenas informativo/visual. A restrição de escopo é feita pelo RLS via get_accessible_unit_ids() — todos os N4 têm acesso idêntico dentro de sua unidade, independente do role_title.</div>
+    </div>
+    <ul class="iw check">
+      <li><code>src/types/index.ts</code> — <code>AdminRole.role_title: string | null</code> adicionado</li>
+      <li><code>src/utils/supabase/auth-context.ts</code> — <code>AuthContext.role_title</code> adicionado + consulta ao banco em <code>getAuthContext()</code></li>
+      <li>Índice parcial em <code>admin_roles(role_title) WHERE role_title IS NOT NULL</code></li>
+      <li>Usuário N4 de Vila Rezende atualizado para <code>role_title = 'pastor_local'</code></li>
+    </ul>
+
+    <div class="fase-header done" style="margin-top:24px">
+      <div class="fase-num">v4.2-B</div>
+      <div class="fase-title">Roteamento automático por nível de acesso</div>
+      <div class="fase-badges"><span class="fase-badge">✅ Implementado</span><span class="fase-badge">3 arquivos</span></div>
+    </div>
+    <div class="rule-box info">
+      <strong>Novo Fluxo de Roteamento</strong>
+      / (home) → se não autenticado → redirect /login<br>
+      / (home) → se N1/N2/N3/N4 → redirect /dashboard<br>
+      / (home) → se N0 → mostra Dev Console (só Super-Master)<br>
+      /login → após login N0 sem ministry_id → redirect /<br>
+      /login → após login N1+ → redirect /contexto (fluxo anterior)
+    </div>
+    <ul class="iw check">
+      <li><code>src/app/page.tsx</code> — Adicionado guard de auth no início: <code>!ctx → redirect('/login')</code>, <code>ctx.level &gt; 0 → redirect('/dashboard')</code></li>
+      <li><code>src/app/(auth)/login/actions.ts</code> — Após <code>signInWithPassword</code>, verifica level no <code>app_metadata</code>: N0 sem <code>iw_ministry_id</code> → <code>redirect('/')</code>; demais → <code>redirect('/contexto')</code></li>
+      <li>N1/N2/N3/N4 continuam entrando diretamente no dashboard sem ver o console N0</li>
+    </ul>
+
+    <div class="fase-header done" style="margin-top:24px">
+      <div class="fase-num">v4.2-C</div>
+      <div class="fase-title">Console N0 renovado — sem login panel, com criação inline de ministério</div>
+      <div class="fase-badges"><span class="fase-badge">✅ Implementado</span><span class="fase-badge">3 componentes</span></div>
+    </div>
+    <ul class="iw check">
+      <li>Card "Acesso ao Sistema" com <code>QuickLoginPanel</code> <strong>removido</strong> do console N0 — página só é exibida para quem já está autenticado como N0</li>
+      <li>Header do console N0 mostra badge <code>👑 Super Master · N0</code> e botão "Sair"</li>
+      <li>Card "Gestão de Campos" expandido: lista de campos agora é <strong>clicável</strong> (link para <code>/dashboard/admin/campos/{id}</code>)</li>
+      <li><strong>Formulário inline</strong> "Provisionar novo campo" substituiu o link estático: expandível via botão, campos de Nome + Sigla + Descrição, slug auto-gerado a partir do nome, validação de slug duplicado, redirect para admin do campo criado</li>
+      <li><code>src/app/CriarMinisterioInline.tsx</code> — Client Component com <code>useTransition</code> para estado de loading</li>
+      <li><code>src/app/admin-actions.ts</code> — Server Action <code>createMinisterioAction</code>: guard N0, slug normalizado (sem acentos, lowercase, hifens), cria <code>ministries</code> + branding inicial, redirect para admin</li>
+    </ul>
+
+    <div class="fase-header done" style="margin-top:24px">
+      <div class="fase-num">v4.2-D</div>
+      <div class="fase-title">Redesign RBAC — N3 e N4 com plenos poderes por escopo</div>
+      <div class="fase-badges"><span class="fase-badge">✅ Implementado</span><span class="fase-badge">20 arquivos</span></div>
+    </div>
+
+    <p><strong>Modelo anterior:</strong> N3 tinha acesso de escrita em módulos operacionais; N4 era basicamente read-only. N2 aprovava a maioria das operações.</p>
+    <p><strong>Modelo v4.2:</strong> N3 é Master do Setor (plenos poderes sobre todas as igrejas do setor). N4 é Master da Igreja (plenos poderes sobre sua igreja + sub-congregações e células). O RLS <code>get_accessible_unit_ids()</code> já implementava hierarquia recursiva — a mudança é apenas nos guards <code>assertLevel</code> nas Server Actions.</p>
+
+    <div class="rule-box info">
+      <strong>Regra de escopo RBAC v4.2</strong>
+      N3 (unit_id = Setor) → acessa recursivamente: setor + igreja mãe + todas as igrejas filhas<br>
+      N4 (unit_id = Igreja) → acessa recursivamente: igreja + sub-congregações + células<br>
+      N4 + role_title = 'secretario' → mesmas permissões de N4 (RLS limita ao unit_id)<br>
+      N4 + role_title = 'tesoureiro' → mesmas permissões de N4 (RLS limita ao unit_id)<br>
+      Contas de secretary/treasurer criadas por N1 ou N2 via gestão de usuários<br>
+      Configuracoes, api-keys, permissoes: mantidos em N2 (administração de campo)
+    </div>
+
+    <table class="deps">
+      <thead>
+        <tr>
+          <th>Módulo</th>
+          <th>Antes</th>
+          <th>Depois (v4.2)</th>
+          <th>Arquivos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="mod">voluntarios</td><td>N3 write</td><td>N4 write</td><td class="tbl">voluntarios/actions.ts</td></tr>
+        <tr><td class="mod">infantil</td><td>N3 write</td><td>N4 write</td><td class="tbl">infantil/actions.ts</td></tr>
+        <tr><td class="mod">ebd</td><td>N3 write</td><td>N4 write</td><td class="tbl">ebd/actions.ts</td></tr>
+        <tr><td class="mod">eventos (CRUD)</td><td>N3 write</td><td>N4 write</td><td class="tbl">eventos/actions.ts</td></tr>
+        <tr><td class="mod">eventos (publish)</td><td>N2 only</td><td>N3 approve</td><td class="tbl">eventos/actions.ts</td></tr>
+        <tr><td class="mod">ocorrencias</td><td>N3 write / N2 escalate</td><td>N4 write / N3 escalate</td><td class="tbl">ocorrencias/actions.ts</td></tr>
+        <tr><td class="mod">secretaria/pedidos</td><td>N3 create / N2 approve</td><td>N4 create / N3 approve</td><td class="tbl">pedidos/actions.ts</td></tr>
+        <tr><td class="mod">secretaria/batismos</td><td>N3 write / N2 approve</td><td>N4 write / N3 approve</td><td class="tbl">batismos/actions.ts</td></tr>
+        <tr><td class="mod">secretaria/consagrações</td><td>N3 write / N2 approve</td><td>N4 write / N3 approve</td><td class="tbl">consagracoes/actions.ts</td></tr>
+        <tr><td class="mod">secretaria/pastoreio</td><td>N3 write / N2 mgmt</td><td>N4 write / N3 mgmt</td><td class="tbl">pastoreio/actions.ts</td></tr>
+        <tr><td class="mod">escola</td><td>N3 class / N2 semester</td><td>N4 class / N3 semester</td><td class="tbl">escola/actions.ts</td></tr>
+        <tr><td class="mod">cursos</td><td>N3 module / N2 course</td><td>N4 module / N3 course</td><td class="tbl">cursos/actions.ts</td></tr>
+        <tr><td class="mod">financeiro</td><td>N3 lançamentos / N2 approve</td><td>N4 lançamentos / N3 approve</td><td class="tbl">financeiro/actions.ts</td></tr>
+        <tr><td class="mod">financeiro/conciliação</td><td>N2 only</td><td>N3 (setor)</td><td class="tbl">conciliacao/actions.ts</td></tr>
+        <tr><td class="mod">relatórios</td><td>N3 local / N2 field</td><td>N4 local / N3 field</td><td class="tbl">relatorios/actions.ts</td></tr>
+        <tr><td class="mod">requerimentos</td><td>N3 write / N2 manage</td><td>N4 write / N3 manage</td><td class="tbl">requerimentos/actions.ts</td></tr>
+        <tr><td class="mod">patrimônio</td><td>N3 write / N2 manage</td><td>N4 write / N3 manage</td><td class="tbl">patrimonio/actions.ts</td></tr>
+        <tr><td class="mod">comunicação</td><td>N2 only</td><td>N3 (setor)</td><td class="tbl">comunicacao/actions.ts</td></tr>
+        <tr><td class="mod">governança</td><td>N2 only</td><td>N3 (setor)</td><td class="tbl">governanca/actions.ts</td></tr>
+        <tr><td class="mod">analytics</td><td>N2 only</td><td>N3 (setor)</td><td class="tbl">analytics/actions.ts</td></tr>
+        <tr><td class="mod">membros/bank-accounts</td><td>N3 view / N2 write</td><td>N4 view / N3 write</td><td class="tbl">bank-accounts/actions.ts</td></tr>
+        <tr><td class="mod">pagamentos</td><td>N2 only</td><td>N3 (setor)</td><td class="tbl">pagamentos/actions.ts</td></tr>
+        <tr><td class="mod">configuracoes</td><td>N2</td><td>N2 (mantido)</td><td class="tbl">configuracoes/actions.ts</td></tr>
+        <tr><td class="mod">api-keys</td><td>N2</td><td>N2 (mantido)</td><td class="tbl">api-keys/actions.ts</td></tr>
+        <tr><td class="mod">permissoes</td><td>N2</td><td>N2 (mantido)</td><td class="tbl">permissoes/actions.ts</td></tr>
+      </tbody>
+    </table>
+
+    <div class="validacao">
+      <strong>✓ Estado após v4.2</strong>
+      <ul>
+        <li>Home / sempre redireciona usuários não-N0 para o destino correto — sem página de "apresentação" pública</li>
+        <li>N0 vê console com gestão de campos + formulário inline de criação de ministério</li>
+        <li>N1/N2/N3/N4 entram diretamente no dashboard após login</li>
+        <li>N3 (Master do Setor) tem plenos poderes operacionais sobre todas as igrejas do setor</li>
+        <li>N4 (Master da Igreja) tem plenos poderes operacionais sobre sua igreja e sub-unidades</li>
+        <li>Secretário e Tesoureiro são N4 com role_title identificador — mesmas permissões, escopo idêntico ao seu unit_id</li>
+        <li>Segurança de escopo 100% no banco via RLS get_accessible_unit_ids() — assertLevel apenas valida o mínimo necessário</li>
+        <li>Configurações de campo, API Keys e Permissões de usuário continuam restritos a N2 (admins de campo)</li>
+        <li>Migration 040 aplica coluna role_title sem quebrar nenhuma tabela existente (ADD COLUMN IF NOT EXISTS)</li>
+      </ul>
+    </div>
+  </div>
+
   <!-- PRÓXIMOS PASSOS v5 -->
   <div class="next-box">
-    <h2>🚀 Status Final v4.1 — Pronto para Demo</h2>
-    <div class="next-sub">Plataforma completa com 42 entregas. Pronto para deploy na Vercel e apresentação ao cliente.</div>
+    <h2>🚀 Status Final v4.2 — RBAC Completo + Deploy Pronto</h2>
+    <div class="next-sub">Plataforma com 46 entregas e redesign RBAC. Permissões N3/N4 com plenos poderes por escopo hierárquico.</div>
     <ul>
-      <li>✅ <strong>42 módulos entregues</strong> — fundação → enterprise completo</li>
-      <li>✅ <strong>38 migrations SQL</strong> — todas executadas e validadas</li>
-      <li>✅ <strong>Zero erros de runtime</strong> — pós correções v4.1</li>
-      <li>✅ <strong>Zero dependências não declaradas</strong> — recharts removido, SVG nativo</li>
-      <li>✅ <strong>Segurança enterprise</strong> — RLS 100%, RBAC 5 níveis, API Keys com sha256</li>
-      <li>✅ <strong>PWA instalável</strong> — manifest + service worker + push notifications</li>
+      <li>✅ <strong>46 entregas</strong> — v4.1 (42) + role_title + roteamento + console N0 + RBAC redesign</li>
+      <li>✅ <strong>40 migrations SQL</strong> — todas incluindo 040_role_title</li>
+      <li>✅ <strong>N3 = Master do Setor</strong> — plenos poderes sobre todas as igrejas do setor</li>
+      <li>✅ <strong>N4 = Master da Igreja</strong> — plenos poderes sobre sua igreja + sub-congregações + células</li>
+      <li>✅ <strong>role_title</strong> — secretario, tesoureiro, pastor_local como sub-papéis descritivos N4</li>
+      <li>✅ <strong>Console N0</strong> — sem login panel, criação inline de ministério, roteamento automático por nível</li>
     </ul>
     <div style="margin-top:18px;padding:14px 18px;background:rgba(255,255,255,.12);border-radius:10px;font-size:13px;line-height:1.8;">
       <strong>🔵 Roadmap v5 — Pós-demo (sob demanda do cliente)</strong><br><br>
@@ -3243,8 +3391,8 @@
 
   <!-- RODAPÉ -->
   <div class="doc-footer">
-    IgrejasWeb System OS · Roadmap Oficial v4.1 · 24 Fases + Enterprise · Junho 2026 · Confidencial<br>
-    Atualizado em <strong>26/06/2026</strong> · 42 entregas concluídas · 🔒 Segurança enterprise · 💰 Financeiro + Conciliação OFX · 🌐 API Pública + Webhooks + OpenAPI · 📱 PWA + Push · 🏛️ Governança &amp; LGPD · 🤖 Automações · 📊 Analytics BI SVG · 🐛 v4.1 Runtime fixes
+    IgrejasWeb System OS · Roadmap Oficial v4.2 · 24 Fases + Enterprise · Junho 2026 · Confidencial<br>
+    Atualizado em <strong>28/06/2026</strong> · 46 entregas concluídas · 🔒 Segurança enterprise · 💰 Financeiro + Conciliação OFX · 🌐 API Pública + Webhooks + OpenAPI · 📱 PWA + Push · 🏛️ Governança &amp; LGPD · 🤖 Automações · 📊 Analytics BI SVG · 🐛 v4.1 Runtime fixes · 👑 v4.2 RBAC Redesign N3/N4
   </div>
 
 </div>

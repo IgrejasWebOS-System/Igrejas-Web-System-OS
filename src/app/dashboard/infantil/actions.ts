@@ -21,7 +21,7 @@ export async function listarCriancasAction() {
 
 export async function cadastrarCriancaAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { data: child, error } = await sb.from("child_profiles").insert({
     ministry_id: ctx.ministry_id,
@@ -36,7 +36,7 @@ export async function cadastrarCriancaAction(formData: FormData) {
 
 export async function adicionarResponsavelAction(child_id: string, formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { error } = await sb.from("child_responsibles").insert({
     ministry_id: ctx.ministry_id,
@@ -66,7 +66,7 @@ export async function listarTurmasAction() {
 
 export async function criarTurmaAction(formData: FormData) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
   const { error } = await sb.from("child_classes").insert({
     ministry_id: ctx.ministry_id,

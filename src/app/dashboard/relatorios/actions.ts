@@ -23,7 +23,7 @@ export type DREResult = {
 
 export async function dreAction(de: string, ate: string): Promise<DREResult> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -83,7 +83,7 @@ export type BalanceteResult = {
 
 export async function balanceteAction(de: string, ate: string): Promise<BalanceteResult> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   // Buscar contas
@@ -163,7 +163,7 @@ export type InventarioResult = {
 
 export async function inventarioAction(data_ref?: string): Promise<InventarioResult> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const ref = data_ref ?? new Date().toISOString().slice(0, 10);
@@ -246,7 +246,7 @@ export async function membrosRelatorioAction(filtros?: {
   gender_id?: string;
 }): Promise<MembrosRelatorioResult> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   let q = sb

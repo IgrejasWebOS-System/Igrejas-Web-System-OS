@@ -18,6 +18,16 @@ export async function loginAction(formData: FormData) {
     return { error: "E-mail ou senha incorretos." };
   }
 
+  // Verificar se é Super-Master (N0) para redirecionar ao console
+  const { data: { user } } = await supabase.auth.getUser();
+  const meta  = (user?.app_metadata ?? {}) as Record<string, unknown>;
+  const level = meta.iw_level as number | undefined;
+
+  // N0 sem ministry_id (Super-Master) → console da plataforma
+  if (level === 0 && !meta.iw_ministry_id) {
+    redirect("/");
+  }
+
   redirect("/contexto");
 }
 

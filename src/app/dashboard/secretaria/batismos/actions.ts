@@ -15,7 +15,7 @@ export async function listarBatismosAction(params?: {
   type_id?: string;
 }): Promise<BaptismListItem[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   let query = supabase
@@ -64,7 +64,7 @@ export async function listarBatismosAction(params?: {
 
 export async function carregarLookupsBatismo(): Promise<BaptismLookup> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const [typesRes, unitsRes] = await Promise.all([
@@ -80,7 +80,7 @@ export async function carregarLookupsBatismo(): Promise<BaptismLookup> {
 
 export async function criarBatismoAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {
@@ -102,7 +102,7 @@ export async function criarBatismoAction(formData: FormData): Promise<void> {
 
 export async function confirmarBatismoAction(id: string, data_realizada: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   // Buscar processo
@@ -145,7 +145,7 @@ export async function confirmarBatismoAction(id: string, data_realizada: string)
 
 export async function mudarSituacaoBatismoAction(id: string, situacao: BaptismSituacao): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -158,7 +158,7 @@ export async function mudarSituacaoBatismoAction(id: string, situacao: BaptismSi
 
 export async function editarBatismoAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const supabase = await createClient();
 
   const payload: Record<string, unknown> = {};

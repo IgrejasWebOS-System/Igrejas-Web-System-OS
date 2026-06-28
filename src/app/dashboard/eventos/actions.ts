@@ -72,7 +72,7 @@ export async function buscarEventoAction(id: string): Promise<EventItem | null> 
 // ── Criar evento ──────────────────────────────────────────────
 export async function criarEventoAction(formData: FormData): Promise<{ id: string }> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const capacidade = formData.get("capacidade") as string;
@@ -106,7 +106,7 @@ export async function criarEventoAction(formData: FormData): Promise<{ id: strin
 // ── Atualizar evento ──────────────────────────────────────────
 export async function atualizarEventoAction(id: string, formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const capacidade = formData.get("capacidade") as string;
@@ -137,7 +137,7 @@ export async function atualizarEventoAction(id: string, formData: FormData): Pro
 // ── Mudar status ──────────────────────────────────────────────
 export async function mudarStatusEventoAction(id: string, status: EventStatus): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { error } = await sb
@@ -152,7 +152,7 @@ export async function mudarStatusEventoAction(id: string, status: EventStatus): 
 // ── Excluir evento (soft delete) ──────────────────────────────
 export async function excluirEventoAction(id: string): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const { error } = await sb
@@ -167,7 +167,7 @@ export async function excluirEventoAction(id: string): Promise<void> {
 // ── Listar inscrições de um evento ───────────────────────────
 export async function listarInscricoesAction(event_id: string): Promise<EventRegistration[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -189,7 +189,7 @@ export async function listarInscricoesAction(event_id: string): Promise<EventReg
 // ── Inscrever no evento ───────────────────────────────────────
 export async function inscreverAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const event_id = formData.get("event_id") as string;
@@ -237,7 +237,7 @@ export async function atualizarStatusInscricaoAction(
   status: EventRegistrationStatus
 ): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { error } = await sb
@@ -252,7 +252,7 @@ export async function atualizarStatusInscricaoAction(
 // ── Listar check-ins ──────────────────────────────────────────
 export async function listarCheckinsAction(event_id: string): Promise<EventCheckin[]> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { data, error } = await sb
@@ -273,7 +273,7 @@ export async function listarCheckinsAction(event_id: string): Promise<EventCheck
 // ── Fazer check-in ────────────────────────────────────────────
 export async function fazerCheckinAction(formData: FormData): Promise<void> {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 3);
+  assertLevel(ctx, 4);
   const sb = await createClient();
 
   const { error } = await sb

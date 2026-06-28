@@ -5,7 +5,7 @@ import { getAuthContext, assertLevel } from "@/utils/supabase/auth-context";
 
 export async function buscarFinanceiroMensalAction(meses: number = 12) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const desde = new Date();
   desde.setMonth(desde.getMonth() - meses);
@@ -44,7 +44,7 @@ function aggregateMensal(rows: { data: string; tipo: string; valor: number }[]) 
 
 export async function buscarMembrosMensalAction(meses: number = 12) {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
   const desde = new Date();
   desde.setMonth(desde.getMonth() - meses);
@@ -72,7 +72,7 @@ export async function buscarMembrosMensalAction(meses: number = 12) {
 
 export async function buscarKpisAction() {
   const ctx = await getAuthContext();
-  assertLevel(ctx, 2);
+  assertLevel(ctx, 3);
   const sb = await createClient();
 
   const [membresRes, finRes, eventosRes, patrimonioRes] = await Promise.all([
