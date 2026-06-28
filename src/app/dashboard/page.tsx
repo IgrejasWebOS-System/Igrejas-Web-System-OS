@@ -1,7 +1,19 @@
 import { cookies }  from "next/headers";
 import { redirect } from "next/navigation";
-import type { SessionContext } from "@/types";
+import type { ModuleKey, SessionContext } from "@/types";
 import ModuleCard from "./ModuleCard";
+import AniversariantesCard from "./AniversariantesCard";
+
+// Ordem de exibição dos módulos — apenas estes são mostrados no dashboard principal
+const DISPLAY_ORDER: ModuleKey[] = [
+  "membros",
+  "ocorrencias",
+  "secretaria",
+  "financeiro",
+  "patrimonio",
+  "escola",
+  "ebd",
+];
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default async function DashboardPage() {
@@ -11,8 +23,11 @@ export default async function DashboardPage() {
 
   const ctx: SessionContext = JSON.parse(raw);
 
+  // Filtra pelos módulos ativos do ministério, respeitando a ordem definida
+  const ordered = DISPLAY_ORDER.filter(m => ctx.modules.includes(m));
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 28, maxWidth: 1100 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 28, maxWidth: 1200 }}>
 
       {/* ── Módulos ───────────────────────────────────────────── */}
       <div>
@@ -23,14 +38,16 @@ export default async function DashboardPage() {
         </div>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gridTemplateColumns: "repeat(4, 1fr)",
           gap: 12,
         }}>
-          {ctx.modules.map(mod => (
+          {ordered.map(mod => (
             <ModuleCard key={mod} mod={mod} />
           ))}
+          {/* Card especial — Aniversariantes */}
+          <AniversariantesCard />
         </div>
-        {ctx.modules.length === 0 && (
+        {ordered.length === 0 && (
           <div style={{
             padding: "40px 24px", textAlign: "center",
             background: "var(--color-surface)", borderRadius: 12,

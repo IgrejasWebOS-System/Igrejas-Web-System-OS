@@ -329,7 +329,7 @@
     </div>
 
     <div class="status-group">
-      <div class="status-group-label">v4.2 — RBAC Redesign + Roteamento + role_title (28/06/2026)</div>
+      <div class="status-group-label">v4.2 — RBAC Redesign + Roteamento + role_title + Dashboard UI (28/06/2026)</div>
       <div class="status-grid">
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Migration 040 — role_title em admin_roles</span></div>
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Types — AdminRole + AuthContext com role_title</span></div>
@@ -338,6 +338,8 @@
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ N3 = Master Setor (plenos poderes em 20+ módulos)</span></div>
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ N4 = Master Igreja (plenos poderes na sua unidade)</span></div>
         <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Secretário + Tesoureiro como N4 com role_title</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Dashboard — reordenação de cards + grid 4 colunas</span></div>
+        <div class="status-item done"><div class="status-dot done"></div><span class="status-label">✅ Card Aniversariantes + página /dashboard/aniversariantes</span></div>
       </div>
     </div>
   </div>
@@ -3367,32 +3369,54 @@
     </div>
   </div>
 
+    <div class="fase-header done" style="margin-top:24px">
+      <div class="fase-num">v4.2-E</div>
+      <div class="fase-title">Dashboard — Reordenação de cards, grid 4 colunas e card Aniversariantes</div>
+      <div class="fase-badges"><span class="fase-badge">✅ Implementado</span><span class="fase-badge">3 arquivos</span></div>
+    </div>
+    <p>Reorganização visual do dashboard principal: ordem de exibição de módulos definida por constante <code>DISPLAY_ORDER</code>, grid fixo de 4 colunas, e novo card especial "Aniversariantes" com página própria.</p>
+    <ul class="iw check">
+      <li><code>src/app/dashboard/page.tsx</code> — <code>DISPLAY_ORDER</code> define exibição: Membros → Ocorrências → Secretaria → Financeiro → Patrimônio → Escola Teológica → EBD. Grid alterado de <code>auto-fill minmax(280px)</code> para <code>repeat(4, 1fr)</code>. Cursos e Eventos ocultos nesta fase.</li>
+      <li><code>src/app/dashboard/AniversariantesCard.tsx</code> — Card especial (Client Component) em rosa/pink, link para <code>/dashboard/aniversariantes</code>, descritivo "Nascimento · Casamento · Batismo", visualmente consistente com <code>ModuleCard</code>.</li>
+      <li><code>src/app/dashboard/aniversariantes/page.tsx</code> — Página com 3 seções independentes: Aniversário de Nascimento (azul), Casamento (pink) e Batismo (roxo). Estado vazio elegante com aviso de integração pendente. Arquitetura pronta para receber dados de <code>birth_date</code>, <code>wedding_date</code> e <code>baptism_date</code> do cadastro de membros.</li>
+    </ul>
+    <div class="rule-box info">
+      <strong>Campos necessários no cadastro de membros (próxima integração)</strong><br>
+      birth_date → Aniversário de Nascimento (já existe em Party.birth_date)<br>
+      wedding_date → Aniversário de Casamento (a adicionar em members)<br>
+      baptism_date → Aniversário de Batismo (a adicionar em members)
+    </div>
+  </div>
+
   <!-- PRÓXIMOS PASSOS v5 -->
   <div class="next-box">
-    <h2>🚀 Status Final v4.2 — RBAC Completo + Deploy Pronto</h2>
-    <div class="next-sub">Plataforma com 46 entregas e redesign RBAC. Permissões N3/N4 com plenos poderes por escopo hierárquico.</div>
+    <h2>🚀 Status Final v4.2 — RBAC + Dashboard UI Completos</h2>
+    <div class="next-sub">Plataforma com 48 entregas, redesign RBAC e novo layout de dashboard com Aniversariantes.</div>
     <ul>
-      <li>✅ <strong>46 entregas</strong> — v4.1 (42) + role_title + roteamento + console N0 + RBAC redesign</li>
+      <li>✅ <strong>48 entregas</strong> — v4.1 (42) + role_title + roteamento + console N0 + RBAC redesign + dashboard UI + Aniversariantes</li>
       <li>✅ <strong>40 migrations SQL</strong> — todas incluindo 040_role_title</li>
       <li>✅ <strong>N3 = Master do Setor</strong> — plenos poderes sobre todas as igrejas do setor</li>
       <li>✅ <strong>N4 = Master da Igreja</strong> — plenos poderes sobre sua igreja + sub-congregações + células</li>
       <li>✅ <strong>role_title</strong> — secretario, tesoureiro, pastor_local como sub-papéis descritivos N4</li>
       <li>✅ <strong>Console N0</strong> — sem login panel, criação inline de ministério, roteamento automático por nível</li>
+      <li>✅ <strong>Dashboard grid 4 colunas</strong> — ordem definida: Membros, Ocorrências, Secretaria, Financeiro, Patrimônio, Escola, EBD</li>
+      <li>✅ <strong>Card Aniversariantes</strong> — nascimento, casamento e batismo, integração pronta para dados de membros</li>
     </ul>
     <div style="margin-top:18px;padding:14px 18px;background:rgba(255,255,255,.12);border-radius:10px;font-size:13px;line-height:1.8;">
       <strong>🔵 Roadmap v5 — Pós-demo (sob demanda do cliente)</strong><br><br>
-      <strong>1. Integrações reais de pagamento</strong> — credenciais Pagar.me/Stripe para cobranças de eventos e cursos<br>
-      <strong>2. SendGrid + Twilio</strong> — envio real de e-mail e SMS nas campanhas de comunicação<br>
-      <strong>3. MFA e SSO</strong> — autenticação Google Workspace / Azure AD (RBAC já suporta)<br>
-      <strong>4. App nativo React Native + Expo</strong> — check-in infantil offline, câmera QR<br>
-      <strong>5. Cron jobs Supabase</strong> — aniversariantes automáticos, refresh de views materializadas
+      <strong>1. Aniversariantes — integração real</strong> — conectar <code>wedding_date</code> e <code>baptism_date</code> ao cadastro de membros, query de aniversariantes do mês<br>
+      <strong>2. Integrações reais de pagamento</strong> — credenciais Pagar.me/Stripe para cobranças de eventos e cursos<br>
+      <strong>3. SendGrid + Twilio</strong> — envio real de e-mail e SMS nas campanhas de comunicação<br>
+      <strong>4. MFA e SSO</strong> — autenticação Google Workspace / Azure AD (RBAC já suporta)<br>
+      <strong>5. App nativo React Native + Expo</strong> — check-in infantil offline, câmera QR<br>
+      <strong>6. Cron jobs Supabase</strong> — aniversariantes automáticos, refresh de views materializadas
     </div>
   </div>
 
   <!-- RODAPÉ -->
   <div class="doc-footer">
     IgrejasWeb System OS · Roadmap Oficial v4.2 · 24 Fases + Enterprise · Junho 2026 · Confidencial<br>
-    Atualizado em <strong>28/06/2026</strong> · 46 entregas concluídas · 🔒 Segurança enterprise · 💰 Financeiro + Conciliação OFX · 🌐 API Pública + Webhooks + OpenAPI · 📱 PWA + Push · 🏛️ Governança &amp; LGPD · 🤖 Automações · 📊 Analytics BI SVG · 🐛 v4.1 Runtime fixes · 👑 v4.2 RBAC Redesign N3/N4
+    Atualizado em <strong>28/06/2026</strong> · 48 entregas concluídas · 🔒 Segurança enterprise · 💰 Financeiro + Conciliação OFX · 🌐 API Pública + Webhooks + OpenAPI · 📱 PWA + Push · 🏛️ Governança &amp; LGPD · 🤖 Automações · 📊 Analytics BI SVG · 🐛 v4.1 Runtime fixes · 👑 v4.2 RBAC Redesign N3/N4 · 🎂 Aniversariantes
   </div>
 
 </div>
